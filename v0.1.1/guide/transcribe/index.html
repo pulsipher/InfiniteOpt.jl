@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Model Transcription · InfiniteOpt.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img class="docs-light-only" src="../../assets/logo.png" alt="InfiniteOpt.jl logo"/><img class="docs-dark-only" src="../../assets/logo-dark.png" alt="InfiniteOpt.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">InfiniteOpt.jl</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">User Guide</span><ul><li><a class="tocitem" href="../install/">Installation</a></li><li><a class="tocitem" href="../model/">Infinite Models</a></li><li><a class="tocitem" href="../sets/">Infinite Sets</a></li><li><a class="tocitem" href="../parameter/">Infinite Parameters</a></li><li><a class="tocitem" href="../finite_parameter/">Finite Parameters</a></li><li><a class="tocitem" href="../variable/">Variables</a></li><li><a class="tocitem" href="../expression/">Expressions</a></li><li><a class="tocitem" href="../measure/">Measures</a></li><li><a class="tocitem" href="../objective/">Objectives</a></li><li><a class="tocitem" href="../constraint/">Constraints</a></li><li class="is-active"><a class="tocitem" href>Model Transcription</a><ul class="internal"><li><a class="tocitem" href="#Overview-1"><span>Overview</span></a></li><li><a class="tocitem" href="#Basic-Usage-1"><span>Basic Usage</span></a></li><li><a class="tocitem" href="#Transcription-Theory-1"><span>Transcription Theory</span></a></li><li><a class="tocitem" href="#TranscriptionOpt-1"><span>TranscriptionOpt</span></a></li><li><a class="tocitem" href="#Datatypes-1"><span>Datatypes</span></a></li><li><a class="tocitem" href="#Methods-1"><span>Methods</span></a></li></ul></li><li><a class="tocitem" href="../optimize/">Optimization</a></li><li><a class="tocitem" href="../result/">Results</a></li></ul></li><li><a class="tocitem" href="../../examples/">Examples</a></li><li><a class="tocitem" href="../../extensions/">Extensions</a></li><li><a class="tocitem" href="../../develop/">Development</a></li><li><a class="tocitem" href="../../library/">Library</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">User Guide</a></li><li class="is-active"><a href>Model Transcription</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Model Transcription</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/docs/src/guide/transcribe.md#L" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="transcription_docs-1"><a class="docs-heading-anchor" href="#transcription_docs-1">Model Transcription</a><a class="docs-heading-anchor-permalink" href="#transcription_docs-1" title="Permalink"></a></h1><p>A guide and manual for transcribing infinite models using <code>InfiniteOpt</code>. The Datatypes and Methods sections at the end comprise the manual, and the above sections comprise the guide.</p><h2 id="Overview-1"><a class="docs-heading-anchor" href="#Overview-1">Overview</a><a class="docs-heading-anchor-permalink" href="#Overview-1" title="Permalink"></a></h2><p>All infinite models need to be reformulated in such a way that they can be solved using traditional optimization methods. Typically, this involves discretization of the infinite domain via particular parameter support points. By default, <code>InfiniteOpt</code> employs this methodology via the use of transcription models (which comprise the <code>optimizer_model</code> as discussed in the <a href="../model/#infinite_model_docs-1">Infinite Models</a> section). <code>InfiniteOpt</code> is built modularly to readily accept other user defined techniques and this is discussed in further detail on the <a href="../../extensions/#Extensions-1">Extensions</a> page. This page will detail transcription models based in <code>InfiniteOpt.TranscriptionOpt</code> which provide the default transcription (reformulation) capabilities of <code>InfiniteOpt</code>.</p><h2 id="Basic-Usage-1"><a class="docs-heading-anchor" href="#Basic-Usage-1">Basic Usage</a><a class="docs-heading-anchor-permalink" href="#Basic-Usage-1" title="Permalink"></a></h2><p>Most users will not need to employ the capabilities of <code>TranscriptionOpt</code> directly since they are employed implicitly with the call of <a href="../optimize/#JuMP.optimize!-Tuple{InfiniteModel}"><code>optimize!</code></a> on an infinite model. This occurs since <code>TranscriptionModel</code>s are the default optimizer model type that is employed.</p><p>However, some users may wish to use <code>TranscriptionOpt</code> to extract a fully discretized/transcribed version of an infinite model that is conveniently output as a typical <code>JuMP</code> model and can then be treated as such. This is principally accomplished via the <a href="#InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{}"><code>TranscriptionModel</code></a> constructor. To illustrate how this is done, let&#39;s first define a basic infinite model with a simple support structure for the sake of example:</p><pre><code class="language-julia-repl">julia&gt; using InfiniteOpt, JuMP
+
+julia&gt; inf_model = InfiniteModel();
+
+julia&gt; @infinite_parameter(inf_model, t in [0, 10], supports = [0, 5, 10])
+t
+
+julia&gt; @infinite_variable(inf_model, g(t) &gt;= 0)
+g(t)
+
+julia&gt; @hold_variable(inf_model, z, Bin)
+z
+
+julia&gt; @objective(inf_model, Min, 2z + support_sum(g, t))
+2 z + sum(g(t))
+
+julia&gt; @BDconstraint(inf_model, initial(t == 0), g == 1)
+initial : g(t) = 1.0, ∀ t = 0
+
+julia&gt; @constraint(inf_model, constr, g^2 - z &lt;= 42)
+constr : g(t)² - z ≤ 42.0
+
+julia&gt; print(inf_model)
+Min 2 z + sum(g(t))
+Subject to
+ g(t) ≥ 0.0
+ z binary
+ g(t) = 1.0, ∀ t = 0
+ g(t)² - z ≤ 42.0
+ t ∈ [0, 10]</code></pre><p>Now we can make <code>JuMP</code> model containing the transcribed version of <code>inf_model</code> via <a href="#InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{}"><code>TranscriptionModel</code></a>:</p><pre><code class="language-julia-repl">julia&gt; trans_model = TranscriptionModel(inf_model)
+A JuMP Model
+Minimization problem with:
+Variables: 4
+Objective function type: GenericAffExpr{Float64,VariableRef}
+`GenericAffExpr{Float64,VariableRef}`-in-`MathOptInterface.EqualTo{Float64}`: 1 constraint
+`GenericQuadExpr{Float64,VariableRef}`-in-`MathOptInterface.LessThan{Float64}`: 3 constraints
+`VariableRef`-in-`MathOptInterface.GreaterThan{Float64}`: 3 constraints
+`VariableRef`-in-`MathOptInterface.ZeroOne`: 1 constraint
+Model mode: AUTOMATIC
+CachingOptimizer state: NO_OPTIMIZER
+Solver name: No optimizer attached.
+
+julia&gt; print(trans_model)
+Min 2 z + g(support: 1) + g(support: 2) + g(support: 3)
+Subject to
+ initial(Support: 1) : g(support: 1) = 1.0
+ constr(Support: 1) : g(support: 1)² - z ≤ 42.0
+ constr(Support: 2) : g(support: 2)² - z ≤ 42.0
+ constr(Support: 3) : g(support: 3)² - z ≤ 42.0
+ g(support: 1) ≥ 0.0
+ g(support: 2) ≥ 0.0
+ g(support: 3) ≥ 0.0
+ z binary</code></pre><p>Thus, we have a transcribed <code>JuMP</code> model. To be precise this actually a <code>TranscriptionModel</code> which is a <code>JuMP.Model</code> with some extra data stored in the <code>ext</code> field that retains the mapping between the transcribed variables and constraints and their infinite counterparts. Notice, that multiple finite variables have been introduced to discretize <code>g(t)</code> at supports 1, 2, and 3 which correspond to 0, 5, and 10 as can be queried by <a href="#InfiniteOpt.variable_supports-Tuple{Model,InfiniteVariableRef,Val{:TransData}}"><code>variable_supports</code></a>:</p><pre><code class="language-julia-repl">julia&gt; variable_supports(trans_model, g)
+3-element Array{Tuple{Float64},1}:
+ (0.0,)
+ (5.0,)
+ (10.0,)</code></pre><p>Also, notice how the constraints are transcribed in accordance with these supports except the initial condition which naturally is only invoked for the first support point. Furthermore, the transcription variable(s) of any variable associated with the infinite model can be determined via <a href="#InfiniteOpt.TranscriptionOpt.transcription_variable"><code>transcription_variable</code></a>:</p><pre><code class="language-julia-repl">julia&gt; transcription_variable(trans_model, g)
+3-element Array{VariableRef,1}:
+ g(support: 1)
+ g(support: 2)
+ g(support: 3)
+
+julia&gt; transcription_variable(trans_model, z)
+z</code></pre><p>Similarly, the transcription constraints associated with infinite model constraints can be queried via <a href="#InfiniteOpt.TranscriptionOpt.transcription_constraint"><code>transcription_constraint</code></a> and the associated supports and infinite parameters can be found via <a href="../measure/#InfiniteOpt.supports-Tuple{AbstractMeasureData}"><code>constraint_supports</code></a> and <a href="../measure/#InfiniteOpt.parameter_refs-Tuple{AbstractMeasureData}"><code>constraint_parameter_refs</code></a>:</p><pre><code class="language-julia-repl">julia&gt; transcription_constraint(trans_model, initial)
+1-element Array{ConstraintRef,1}:
+ initial(Support: 1) : g(support: 1) = 1.0
+
+julia&gt; transcription_constraint(trans_model, constr)
+3-element Array{ConstraintRef,1}:
+ constr(Support: 1) : g(support: 1)² - z ≤ 42.0
+ constr(Support: 2) : g(support: 2)² - z ≤ 42.0
+ constr(Support: 3) : g(support: 3)² - z ≤ 42.0
+
+julia&gt; constraint_supports(trans_model, constr)
+3-element Array{Tuple{Float64},1}:
+ (0.0,)
+ (5.0,)
+ (10.0,)
+
+julia&gt; constraint_parameter_refs(trans_model, constr)
+(t,)</code></pre><p>Note the parameter reference tuple corresponds to the support tuples.</p><p>Now we have a transcribed <code>JuMP</code> model that can be optimized via traditional <code>JuMP</code> methods whose variables and constraints can be accessed using the methods mentioned above.</p><h2 id="Transcription-Theory-1"><a class="docs-heading-anchor" href="#Transcription-Theory-1">Transcription Theory</a><a class="docs-heading-anchor-permalink" href="#Transcription-Theory-1" title="Permalink"></a></h2><p>A given infinite dimensional optimization problem is parameterized according to infinite parameters following our abstraction. In general, most solution strategies transcribe the problem according to certain finite parameter values (supports) and thus represent the problem in terms of these supports (e.g., using discrete time points in dynamic optimization). This methodology can be generalized into the following steps:</p><ul><li>define supports for each infinite parameter if not already defined,</li><li>expand any measures according to their underlying numerical representation using transcribed infinite variables as appropriate,</li><li>replace any remaining infinite variables with transcribed variables supported over each unique combination of the underlying parameter supports,</li><li>replace any remaining infinite constraints with transcribed ones supported over all the unique support combinations stemming from the infinite parameters they depend on.</li></ul><p>For example, let&#39;s consider a space-time optimization problem of the form:</p><div>\[\begin{aligned}
+	&amp;&amp;\min_{y(t), g(t, x)} &amp;&amp;&amp; \int_0^{10} y^2(t) dt \\
+	&amp;&amp;\text{s.t.} &amp;&amp;&amp; y(0) = 1 \\
+	&amp;&amp;&amp;&amp;&amp; \int_{x \in [-1, 1]^2} g(t, x) dx = 42, &amp;&amp; \forall t \in [0, 10] \\
+    &amp;&amp;&amp;&amp;&amp; 3g(t, x) + 2y^2(t) \leq 2, &amp;&amp; \forall t \in T, \ x \in [-1, 1]^2. \\
+\end{aligned}\]</div><p>Thus, we have an optimization problem whose decision space is infinite with respect to time <span>$t$</span> and position <span>$x$</span>. Now let&#39;s transcribe it following the above steps. First, we need to specify the infinite parameter supports and for simplicity let&#39;s choose the following sparse sets:</p><ul><li><span>$t \in \{0, 10\}$</span></li><li><span>$x \in \{[-1, -1]^T, [-1, 1]^T, [1, -1]^T, [1, 1]^T\}$</span>.</li></ul><p>Now we expand the two integrals (measures) via a finite approximation using only the above supports and term coefficients of 1 (note this is not numerically correct but is done for conciseness in example). Doing this, we obtain the form:</p><div>\[\begin{aligned}
+	&amp;&amp;\min_{y(t), g(t, x)} &amp;&amp;&amp; y^2(0) + y^2(10) \\
+	&amp;&amp;\text{s.t.} &amp;&amp;&amp; y(0) = 1 \\
+	&amp;&amp;&amp;&amp;&amp; g(t, [-1, -1]) + g(t, [-1, 1]) + g(t, [1, -1]) + g(t, [1, 1]) = 42, &amp;&amp; \forall t \in [0, 10] \\
+    &amp;&amp;&amp;&amp;&amp; 3g(t, x) + 2y^2(t) \leq 2, &amp;&amp; \forall t \in T, \ x \in [-1, 1]^2. \\
+\end{aligned}\]</div><p>Notice that the infinite variable <span>$y(t)$</span> in the objective measure has been replaced with finite transcribed variables <span>$y(0)$</span> and <span>$y(10)$</span>. Also, the infinite variable <span>$g(t, x)$</span> was replaced with partially transcribed variables in the second constraint in accordance with the measure over the positional domain <span>$x$</span>.</p><p>Now we need to transcribe the remaining infinite and semi-infinite variables with finite variables and duplicate the remaining infinite constraints accordingly. This means that the second constraint needs to be transcribed over the time domain and the third constraint needs to be transcribed for each unique combination of the time and position supports. Applying this transcription yields:</p><div>\[\begin{aligned}
+	&amp;&amp;\min_{y(t), g(t, x)} &amp;&amp;&amp; y^2(0) + y^2(10) \\
+	&amp;&amp;\text{s.t.} &amp;&amp;&amp; y(0) = 1 \\
+	&amp;&amp;&amp;&amp;&amp; g(0, [-1, -1]) + g(0, [-1, 1]) + g(0, [1, -1]) + g(0, [1, 1]) = 42\\
+    &amp;&amp;&amp;&amp;&amp; g(10, [-1, -1]) + g(10, [-1, 1]) + g(10, [1, -1]) + g(10, [1, 1]) = 42\\
+    &amp;&amp;&amp;&amp;&amp; 3g(0, [-1, -1]) + 2y^2(0) \leq 2 \\
+    &amp;&amp;&amp;&amp;&amp; 3g(0, [-1, 1]) + 2y^2(0) \leq 2 \\
+    &amp;&amp;&amp;&amp;&amp; \vdots \\
+    &amp;&amp;&amp;&amp;&amp; 3g(10, [1, 1]) + 2y^2(10) \leq 2.
+\end{aligned}\]</div><p>Now the problem is fully transcribed (discretized) and can be solved as a standard optimization problem. Note that with realistic measure evaluation schemes more supports might be added to the support sets and these will need to be incorporated when transcribing variables and constraints.</p><p>It is easy to imagine how the above procedure can get quite involved to do manually, but this is precisely what <code>InfiniteOpt</code> automates behind the scenes. Let&#39;s highlight this by repeating the same example using <code>InfiniteOpt</code> (again using the incorrect simple representation for the integrals for conciseness).</p><pre><code class="language-julia">using JuMP, InfiniteOpt
+
+# Initialize model
+inf_model = InfiniteModel()
+
+# Define parameters and supports
+@infinite_parameter(inf_model, t in [0, 10], supports = [0, 10])
+@infinite_parameter(inf_model, x[1:2] in [-1, 1], supports = [-1, 1], independent = true)
+
+# Define variables
+@infinite_variable(inf_model, y(t))
+@infinite_variable(inf_model, g(t, x))
+
+# Set the objective (using support_sum for the integral given our simple example)
+# Note: In real problems measure should be used
+@objective(inf_model, Min, support_sum(y^2, t))
+
+# Define the constraints
+@BDconstraint(inf_model, t == 0, y == 1)
+@constraint(inf_model, support_sum(g, x) == 42) # support_sum for simplicity
+@constraint(inf_model, 3g + y^2 &lt;= 2)
+
+# Print the infinite model
+print(inf_model)
+
+# output
+Min sum(y(t)²)
+Subject to
+ y(t) = 1.0, ∀ t = 0
+ sum(g(t, x)) = 42.0
+ y(t)² + 3 g(t, x) ≤ 2.0
+ t ∈ [0, 10]
+ x[1] ∈ [-1, 1]
+ x[2] ∈ [-1, 1]</code></pre><p>Thus, we obtain the infinite problem in <code>InfiniteOpt</code>. As previously noted, transcription would be handled automatically behind the scenes when the model is optimized. However, we can directly extract the transcribed version via a <code>TranscriptionModel</code>:</p><pre><code class="language-julia-repl">julia&gt; trans_model = TranscriptionModel(inf_model);
+
+julia&gt; print(trans_model)
+Min y(support: 1)² + y(support: 2)²
+Subject to
+ noname(Support: 1) : y(support: 1) = 1.0
+ noname(Support: 1) : g(support: 1) + g(support: 3) + g(support: 5) + g(support: 7) = 42.0
+ noname(Support: 2) : g(support: 2) + g(support: 4) + g(support: 6) + g(support: 8) = 42.0
+ noname(Support: 1) : y(support: 1)² + 3 g(support: 1) ≤ 2.0
+ noname(Support: 2) : y(support: 2)² + 3 g(support: 2) ≤ 2.0
+ noname(Support: 3) : y(support: 1)² + 3 g(support: 3) ≤ 2.0
+ noname(Support: 4) : y(support: 2)² + 3 g(support: 4) ≤ 2.0
+ noname(Support: 5) : y(support: 1)² + 3 g(support: 5) ≤ 2.0
+ noname(Support: 6) : y(support: 2)² + 3 g(support: 6) ≤ 2.0
+ noname(Support: 7) : y(support: 1)² + 3 g(support: 7) ≤ 2.0
+ noname(Support: 8) : y(support: 2)² + 3 g(support: 8) ≤ 2.0</code></pre><p>This precisely matches what we found analytically. Note that the unique support combinations are determined automatically and are represented visually as <code>support: #</code>. The precise support values can be looked up via <code>variable_supports</code>:</p><pre><code class="language-julia-repl">julia&gt; variable_supports(trans_model, y)
+2-element Array{Tuple{Float64},1}:
+ (0.0,)
+ (10.0,)
+
+julia&gt; variable_supports(trans_model, g)
+8-element Array{Tuple{Float64,Array{Float64,1}},1}:
+ (0.0, [-1.0, -1.0])
+ (10.0, [-1.0, -1.0])
+ (0.0, [1.0, -1.0])
+ (10.0, [1.0, -1.0])
+ (0.0, [-1.0, 1.0])
+ (10.0, [-1.0, 1.0])
+ (0.0, [1.0, 1.0])
+ (10.0, [1.0, 1.0])</code></pre><h2 id="TranscriptionOpt-1"><a class="docs-heading-anchor" href="#TranscriptionOpt-1">TranscriptionOpt</a><a class="docs-heading-anchor-permalink" href="#TranscriptionOpt-1" title="Permalink"></a></h2><p><code>InfiniteOpt.TranscriptionOpt</code> is a submodule which principally implements <code>TranscriptionModel</code>s and its related access/modification methods. Thus, this section will detail what these are and how they work.</p><h3 id="TranscriptionModels-1"><a class="docs-heading-anchor" href="#TranscriptionModels-1">TranscriptionModels</a><a class="docs-heading-anchor-permalink" href="#TranscriptionModels-1" title="Permalink"></a></h3><p>A <code>TranscriptionModel</code> is simply a <code>JuMP.Model</code> whose <code>ext</code> field contains <a href="#InfiniteOpt.TranscriptionOpt.TranscriptionData"><code>TranscriptionData</code></a> which acts to map the transcribed model back to the original infinite model (e.g., map the variables and constraints). Such models are constructed via the <a href="#InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{}"><code>TranscriptionModel</code></a> constructors:</p><pre><code class="language-julia-repl">julia&gt; model1 = TranscriptionModel() # make an empty model
+A JuMP Model
+Feasibility problem with:
+Variables: 0
+Model mode: AUTOMATIC
+CachingOptimizer state: NO_OPTIMIZER
+Solver name: No optimizer attached.
+
+julia&gt; model2 = TranscriptionModel(inf_model) # generate from an InfiniteModel
+A JuMP Model
+Minimization problem with:
+Variables: 4
+Objective function type: GenericAffExpr{Float64,VariableRef}
+`GenericAffExpr{Float64,VariableRef}`-in-`MathOptInterface.EqualTo{Float64}`: 1 constraint
+`GenericQuadExpr{Float64,VariableRef}`-in-`MathOptInterface.LessThan{Float64}`: 3 constraints
+`VariableRef`-in-`MathOptInterface.GreaterThan{Float64}`: 3 constraints
+`VariableRef`-in-`MathOptInterface.ZeroOne`: 1 constraint
+Model mode: AUTOMATIC
+CachingOptimizer state: NO_OPTIMIZER
+Solver name: No optimizer attached.</code></pre><p>Note that the all the normal <code>JuMP.Model</code> arguments can be used with both constructors such as specifying the optimizer. The first constructor is what <code>InfiniteOpt</code> uses to initialize the default <code>optimizer_model</code> attribute of <code>InfiniteModel</code>s. The second constructor is used to build the optimizer model when <a href="../optimize/#InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel}"><code>build_optimizer_model!</code></a> is called directly or by <a href="../optimize/#JuMP.optimize!-Tuple{InfiniteModel}"><code>optimize!</code></a>. Thus, second constructor serves as the principle tool for transcribing infinite models as it encapsulates all of the methods to transcribe measures, variables, and constraints.</p><h3 id="Queries-1"><a class="docs-heading-anchor" href="#Queries-1">Queries</a><a class="docs-heading-anchor-permalink" href="#Queries-1" title="Permalink"></a></h3><p>In this section we highlight a number of query methods that pertain <code>TranscriptionModel</code>s and their mappings. First, if the <code>optimizer_model</code> of an <code>InfiniteModel</code> is a <code>TranscriptionModel</code> it can be extracted via <a href="#InfiniteOpt.TranscriptionOpt.transcription_model"><code>transcription_model</code></a>:</p><pre><code class="language-julia-repl">julia&gt; transcription_model(inf_model)
+A JuMP Model
+Feasibility problem with:
+Variables: 0
+Model mode: AUTOMATIC
+CachingOptimizer state: NO_OPTIMIZER
+Solver name: No optimizer attached.</code></pre><p>Here we observe that such a model is currently empty and hasn&#39;t been populated yet. Furthermore, we check that a <code>Model</code> is an <code>TranscriptionModel</code> via <a href="#InfiniteOpt.TranscriptionOpt.is_transcription_model"><code>is_transcription_model</code></a>:</p><pre><code class="language-julia-repl">julia&gt; is_transcription_model(model2)
+true
+
+julia&gt; is_transcription_model(Model())
+false</code></pre><p>We can also extract the raw <a href="#InfiniteOpt.TranscriptionOpt.TranscriptionData"><code>TranscriptionData</code></a> object from a <code>TranscriptionModel</code> via <a href="#InfiniteOpt.TranscriptionOpt.transcription_data"><code>transcription_data</code></a>.</p><pre><code class="language-julia-repl">julia&gt; transcription_data(trans_model);</code></pre><p>Next we can retrieve the <code>JuMP</code> variable(s) for a particular <code>InfiniteOpt</code> variable via <a href="#InfiniteOpt.TranscriptionOpt.transcription_variable"><code>transcription_variable</code></a>. For finite variables, this will be a one to one mapping, and for infinite variables a list of supported variables will be returned in the order of the supports. Following the initial example in the basic usage section, this is done:</p><pre><code class="language-julia-repl">julia&gt; transcription_variable(trans_model, g)
+3-element Array{VariableRef,1}:
+ g(support: 1)
+ g(support: 2)
+ g(support: 3)
+
+julia&gt; transcription_variable(trans_model, z)
+z</code></pre><p>Note that if the <code>TranscriptionModel</code> is stored as the current <code>optimizer_model</code> then the first argument (specifying the <code>TranscriptionModel</code> can be omitted). However, in this case the argument is required since <code>trans_model</code> was built externally.</p><p>Similarly, the parameter supports corresponding to the transcription variables (in the case of transcribed infinite variables) can be queried via <a href="../measure/#InfiniteOpt.supports-Tuple{AbstractMeasureData}"><code>variable_supports</code></a>:</p><pre><code class="language-julia-repl">julia&gt; variable_supports(trans_model, g)
+3-element Array{Tuple{Float64},1}:
+ (0.0,)
+ (5.0,)
+ (10.0,)</code></pre><p>Again, the first argument can be dropped if this the <code>TranscriptionModel</code> of interest is stored in the <code>optimizer_model</code> field of the <code>InfiniteModel</code> as is the case when <a href="../optimize/#InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel}"><code>build_optimizer_model!</code></a> or <a href="../optimize/#JuMP.optimize!-Tuple{InfiniteModel}"><code>optimize!</code></a> is invoked.</p><p>Likewise, <a href="#InfiniteOpt.TranscriptionOpt.transcription_constraint"><code>transcription_constraint</code></a> and <a href="../measure/#InfiniteOpt.supports-Tuple{AbstractMeasureData}"><code>constraint_supports</code></a> can be used with constraints to find their transcribed equivalents in the <code>JuMP</code> model and determine their supports. In the case of infinite constraints, their parameter references can be determined <a href="../measure/#InfiniteOpt.parameter_refs-Tuple{AbstractMeasureData}"><code>constraint_parameter_refs</code></a> just like infinite variables.</p><h2 id="Datatypes-1"><a class="docs-heading-anchor" href="#Datatypes-1">Datatypes</a><a class="docs-heading-anchor-permalink" href="#Datatypes-1" title="Permalink"></a></h2><ul></ul><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.TranscriptionOpt.TranscriptionData" href="#InfiniteOpt.TranscriptionOpt.TranscriptionData"><code>InfiniteOpt.TranscriptionOpt.TranscriptionData</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">TranscriptionData</code></pre><p>A DataType for storing the data mapping an <a href="../model/#InfiniteOpt.InfiniteModel"><code>InfiniteOpt.InfiniteModel</code></a> that has been transcribed to a regular <a href="../../JuMP/#JuMP.Model"><code>JuMP.Model</code></a> that contains the transcribed variables. This is stored in the <code>ext</code> field of a <code>JuMP.Model</code> to make what is called a <code>TranscriptionModel</code> via the <a href="#InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{}"><code>TranscriptionModel</code></a> constructor.</p><p><strong>Fields</strong></p><ul><li><code>infinite_to_vars::Dict{InfiniteOpt.InfiniteVariableRef,  Vector{JuMP.VariableRef}}</code>: Infinite variables to their transcribed variables.</li><li><code>hold_to_var::Dict{InfiniteOpt.HoldVariableRef, JuMP.VariableRef}</code>: Hold variables to model variables.</li><li><code>point_to_var::Dict{InfiniteOpt.PointVariableRef, JuMP.VariableRef}</code>: Point variables to model variables.</li><li><code>next_var_index::Int</code> Index for generating measure expansion variables.</li><li><code>reduced_info::Dict{Int, InfiniteOpt.ReducedInfiniteInfo}</code> Reduced variables                                                  made by measure expansion.</li><li><code>infvar_to_supports::Dict{InfiniteOpt.InfiniteVariableRef, Dict}</code>: Infinite variables to transcribed supports indexed by their numeric aliases.</li><li><code>infinite_to_constrs::Dict{InfiniteOpt.InfiniteConstraintRef, Vector{JuMP.ConstraintRef}}</code>: Infinite constraints to their transcribed constraints.</li><li><code>measure_to_constrs::Dict{InfiniteOpt.MeasureConstraintRef, Vector{JuMP.ConstraintRef}}</code>: Measure constraints to model constraints.</li><li><code>finite_to_constr::Dict{InfiniteOpt.FiniteConstraintRef, JuMP.ConstraintRef}</code>: Finite constraints to model constraints.</li><li><code>infconstr_to_supports::Dict{InfiniteOpt.InfiniteConstraintRef, Dict}</code>: Infinite constraints to the transcribed supports indxed by their numeric aliases.</li><li><code>measconstr_to_supports::Dict{InfiniteOpt.MeasureConstraintRef, Dict}</code>: Measure constraints to the transcribed supports indxed by their numeric aliases.</li><li><code>infconstr_to_params::Dict{InfiniteOpt.InfiniteConstraintRef, Tuple}</code>: Infinite constraints to the parameter tuples associated with each transcribed support.</li><li><code>measconstr_to_params::Dict{InfiniteOpt.MeasureConstraintRef, Tuple}</code>: Measure constraints to the parameter tuples associated with each transcribed support.</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL1-L37">source</a></section></article><h2 id="Methods-1"><a class="docs-heading-anchor" href="#Methods-1">Methods</a><a class="docs-heading-anchor-permalink" href="#Methods-1" title="Permalink"></a></h2><ul><li><a href="#InfiniteOpt.add_measure_variable-Tuple{Model,PointVariable,Val{:TransData}}"><code>InfiniteOpt.add_measure_variable</code></a></li><li><a href="#InfiniteOpt.add_measure_variable-Tuple{Model,ReducedInfiniteInfo,Val{:TransData}}"><code>InfiniteOpt.add_measure_variable</code></a></li><li><a href="#InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel,Val{:TransData}}"><code>InfiniteOpt.build_optimizer_model!</code></a></li><li><a href="#InfiniteOpt.constraint_parameter_refs-Tuple{Model,InfiniteConstraintRef,Val{:TransData}}"><code>InfiniteOpt.constraint_parameter_refs</code></a></li><li><a href="#InfiniteOpt.constraint_supports-Tuple{Model,InfiniteConstraintRef,Val{:TransData}}"><code>InfiniteOpt.constraint_supports</code></a></li><li><a href="#InfiniteOpt.delete_reduced_variable-Tuple{Model,ReducedInfiniteVariableRef,Val{:TransData}}"><code>InfiniteOpt.delete_reduced_variable</code></a></li><li><a href="#InfiniteOpt.optimizer_model_constraint-Tuple{GeneralConstraintRef,Val{:TransData}}"><code>InfiniteOpt.optimizer_model_constraint</code></a></li><li><a href="#InfiniteOpt.optimizer_model_variable-Tuple{Union{HoldVariableRef, InfiniteVariableRef, PointVariableRef},Val{:TransData}}"><code>InfiniteOpt.optimizer_model_variable</code></a></li><li><a href="#InfiniteOpt.reduction_info-Tuple{ReducedInfiniteVariableRef,Val{:TransData}}"><code>InfiniteOpt.reduction_info</code></a></li><li><a href="#InfiniteOpt.variable_supports-Tuple{Model,InfiniteVariableRef,Val{:TransData}}"><code>InfiniteOpt.variable_supports</code></a></li><li><a href="#InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{}"><code>InfiniteOpt.TranscriptionOpt.TranscriptionModel</code></a></li><li><a href="#InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{InfiniteModel,Any}"><code>InfiniteOpt.TranscriptionOpt.TranscriptionModel</code></a></li><li><a href="#InfiniteOpt.TranscriptionOpt.is_transcription_model"><code>InfiniteOpt.TranscriptionOpt.is_transcription_model</code></a></li><li><a href="#InfiniteOpt.TranscriptionOpt.transcription_constraint"><code>InfiniteOpt.TranscriptionOpt.transcription_constraint</code></a></li><li><a href="#InfiniteOpt.TranscriptionOpt.transcription_data"><code>InfiniteOpt.TranscriptionOpt.transcription_data</code></a></li><li><a href="#InfiniteOpt.TranscriptionOpt.transcription_model"><code>InfiniteOpt.TranscriptionOpt.transcription_model</code></a></li><li><a href="#InfiniteOpt.TranscriptionOpt.transcription_variable"><code>InfiniteOpt.TranscriptionOpt.transcription_variable</code></a></li></ul><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.TranscriptionOpt.transcription_model" href="#InfiniteOpt.TranscriptionOpt.transcription_model"><code>InfiniteOpt.TranscriptionOpt.transcription_model</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">transcription_model(model::InfiniteOpt.InfiniteModel)::JuMP.Model</code></pre><p>Return the transcription model stored in <code>model</code> if that is what is stored in <code>model.optimizer_model</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/optimize.jl#LL1-L6">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel,Val{:TransData}}" href="#InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel,Val{:TransData}}"><code>InfiniteOpt.build_optimizer_model!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.build_optimizer_model!(model::InfiniteOpt.InfiniteModel,
+                                   key::Val{:TransData})</code></pre><p>Transcribe <code>model</code> and store it as a <code>TranscriptionModel</code> in the <code>model.optimizer_model</code> field which can be accessed with <code>transcription_model</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/optimize.jl#LL14-L20">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{}" href="#InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{}"><code>InfiniteOpt.TranscriptionOpt.TranscriptionModel</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">TranscriptionModel([optimizer_constructor;
+                   caching_mode::MOIU.CachingOptimizerMode = MOIU.AUTOMATIC,
+                   bridge_constraints::Bool = true])::JuMP.Model</code></pre><p>Return a <a href="../../JuMP/#JuMP.Model"><code>JuMP.Model</code></a> with <a href="#InfiniteOpt.TranscriptionOpt.TranscriptionData"><code>TranscriptionData</code></a> included in the <code>ext</code> data field. Accepts the same arguments as a typical JuMP <code>Model</code>.</p><p><strong>Example</strong></p><pre><code class="language-julia-repl">julia&gt; TranscriptionModel()
+A JuMP Model
+Feasibility problem with:
+Variables: 0
+Model mode: AUTOMATIC
+CachingOptimizer state: NO_OPTIMIZER
+Solver name: No optimizer attached.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL85-L103">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{InfiniteModel,Any}" href="#InfiniteOpt.TranscriptionOpt.TranscriptionModel-Tuple{InfiniteModel,Any}"><code>InfiniteOpt.TranscriptionOpt.TranscriptionModel</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">TranscriptionModel(model::InfiniteModel, [optimizer_constructor;
+                   caching_mode::MOIU.CachingOptimizerMode = MOIU.AUTOMATIC,
+                   bridge_constraints::Bool = true])</code></pre><p>Return a <code>TranscriptionModel</code> of <code>model</code>. This transcribes all of the variables, constraints, and objective.</p><p><strong>Example</strong></p><pre><code class="language-julia-repl">julia&gt; TranscriptionModel(model)
+A JuMP Model
+Feasibility problem with:
+Variables: 130
+`GenericAffExpr{Float64,VariableRef}`-in-`MathOptInterface.EqualTo{Float64}`: 25 constraints
+`GenericAffExpr{Float64,VariableRef}`-in-`MathOptInterface.GreaterThan{Float64}`: 100 constraint
+`GenericAffExpr{Float64,VariableRef}`-in-`MathOptInterface.LessThan{Float64}`: 84 constraints
+`VariableRef`-in-`MathOptInterface.EqualTo{Float64}`: 40 constraints
+`VariableRef`-in-`MathOptInterface.GreaterThan{Float64}`: 40 constraints
+`VariableRef`-in-`MathOptInterface.LessThan{Float64}`: 25 constraints
+`VariableRef`-in-`MathOptInterface.Integer`: 40 constraints
+`VariableRef`-in-`MathOptInterface.ZeroOne`: 40 constraints
+Model mode: AUTOMATIC
+CachingOptimizer state: NO_OPTIMIZER
+Solver name: No optimizer attached.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/transcribe.jl#LL774-L800">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.TranscriptionOpt.is_transcription_model" href="#InfiniteOpt.TranscriptionOpt.is_transcription_model"><code>InfiniteOpt.TranscriptionOpt.is_transcription_model</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">is_transcription_model(model::JuMP.Model)::Bool</code></pre><p>Return true if <code>model</code> is a <code>TranscriptionModel</code> or false otherwise.</p><p><strong>Example</strong></p><pre><code class="language-julia-repl">julia&gt; is_transcription_model(model)
+true</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL117-L127">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.TranscriptionOpt.transcription_data" href="#InfiniteOpt.TranscriptionOpt.transcription_data"><code>InfiniteOpt.TranscriptionOpt.transcription_data</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">transcription_data(model::JuMP.Model)::TranscriptionData</code></pre><p>Return the <code>TranscriptionData</code> from a <code>TranscriptionModel</code>. Errors if it is not a <code>TranscriptionModel</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL132-L137">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.TranscriptionOpt.transcription_variable" href="#InfiniteOpt.TranscriptionOpt.transcription_variable"><code>InfiniteOpt.TranscriptionOpt.transcription_variable</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">transcription_variable(model::JuMP.Model,
+                       vref::InfiniteOpt.InfOptVariableRef)</code></pre><p>Return the transcribed variable reference(s) corresponding to <code>vref</code>. Errors if no transcription variable is found. Also can query via the syntax:</p><pre><code class="language-julia">transcription_variable(vref::InfiniteOpt.InfOptVariableRef)</code></pre><p>If the infinite model contains a built transcription model.</p><p><strong>Example</strong></p><pre><code class="language-julia-repl">julia&gt; transcription_variable(trans_model, infvar)
+2-element Array{VariableRef,1}:
+ infvar(support: 1)
+ infvar(support: 2)
+
+julia&gt; transcription_variable(trans_model, hdvar)
+hdvar
+
+julia&gt; transcription_variable(infvar)
+2-element Array{VariableRef,1}:
+ infvar(support: 1)
+ infvar(support: 2)
+
+julia&gt; transcription_variable(hdvar)
+hdvar</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL143-L172">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.optimizer_model_variable-Tuple{Union{HoldVariableRef, InfiniteVariableRef, PointVariableRef},Val{:TransData}}" href="#InfiniteOpt.optimizer_model_variable-Tuple{Union{HoldVariableRef, InfiniteVariableRef, PointVariableRef},Val{:TransData}}"><code>InfiniteOpt.optimizer_model_variable</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.optimizer_model_variable(vref::InfiniteOpt.InfOptVariableRef,
+                                     ::Val{:TransData})</code></pre><p>Proper extension of <a href="../optimize/#InfiniteOpt.optimizer_model_variable"><code>InfiniteOpt.optimizer_model_variable</code></a> for <code>TranscriptionModel</code>s. This simply dispatches to <a href="#InfiniteOpt.TranscriptionOpt.transcription_variable"><code>transcription_variable</code></a>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL203-L209">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.variable_supports-Tuple{Model,InfiniteVariableRef,Val{:TransData}}" href="#InfiniteOpt.variable_supports-Tuple{Model,InfiniteVariableRef,Val{:TransData}}"><code>InfiniteOpt.variable_supports</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.variable_supports(model::JuMP.Model,
+                              vref::InfiniteOpt.InfiniteVariableRef,
+                              key::Val{:TransData} = Val(:TransData))::Vector</code></pre><p>Return the support alias mapping associated with <code>vref</code> in the transcribed model. Errors if <code>vref</code> does not have transcribed variables.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL215-L222">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.TranscriptionOpt.transcription_constraint" href="#InfiniteOpt.TranscriptionOpt.transcription_constraint"><code>InfiniteOpt.TranscriptionOpt.transcription_constraint</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">transcription_constraint(model::JuMP.Model,
+                         cref::InfiniteOpt.GeneralConstraintRef)</code></pre><p>Return the transcribed constraint reference(s) corresponding to <code>cref</code>. Errors if <code>cref</code> has not been transcribed. Also can query via the syntax:</p><pre><code class="language-julia">transcription_constraint(cref::InfiniteOpt.GeneralConstraintRef)</code></pre><p>If the infinite model contains a built transcription model.</p><p><strong>Example</strong></p><pre><code class="language-julia-repl">julia&gt; transcription_constraint(trans_model, fin_con)
+fin_con : x(support: 1) - y &lt;= 3.0
+
+julia&gt; transcription_constraint(fin_con)
+fin_con : x(support: 1) - y &lt;= 3.0</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL232-L251">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.optimizer_model_constraint-Tuple{GeneralConstraintRef,Val{:TransData}}" href="#InfiniteOpt.optimizer_model_constraint-Tuple{GeneralConstraintRef,Val{:TransData}}"><code>InfiniteOpt.optimizer_model_constraint</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.optimizer_model_constraint(cref::InfiniteOpt.GeneralConstraintRef,
+                                       ::Val{:TransData})</code></pre><p>Proper extension of <a href="../optimize/#InfiniteOpt.optimizer_model_constraint"><code>InfiniteOpt.optimizer_model_constraint</code></a> for <code>TranscriptionModel</code>s. This simply dispatches to <a href="#InfiniteOpt.TranscriptionOpt.transcription_constraint"><code>transcription_constraint</code></a>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL287-L293">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.constraint_supports-Tuple{Model,InfiniteConstraintRef,Val{:TransData}}" href="#InfiniteOpt.constraint_supports-Tuple{Model,InfiniteConstraintRef,Val{:TransData}}"><code>InfiniteOpt.constraint_supports</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.constraint_supports(model::JuMP.Model,
+                                cref::InfiniteOpt.GeneralConstraintRef,
+                                key::Val{:TransData} = Val(:TransData))::Vector</code></pre><p>Return the support alias mappings associated with <code>cref</code>. Errors if <code>cref</code> is not transcribed.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL299-L306">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.constraint_parameter_refs-Tuple{Model,InfiniteConstraintRef,Val{:TransData}}" href="#InfiniteOpt.constraint_parameter_refs-Tuple{Model,InfiniteConstraintRef,Val{:TransData}}"><code>InfiniteOpt.constraint_parameter_refs</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.constraint_parameter_refs(model::JuMP.Model,
+                                      cref::InfiniteOpt.GeneralConstraintRef,
+                                      key::Val{:TransData} = Val(:TransData))::Tuple</code></pre><p>Return the a parameter reference tuple of all the parameters that parameterize <code>cref</code> and correspond to the supports. Errors if <code>cref</code> has not been transcribed.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/model.jl#LL326-L333">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.add_measure_variable-Tuple{Model,PointVariable,Val{:TransData}}" href="#InfiniteOpt.add_measure_variable-Tuple{Model,PointVariable,Val{:TransData}}"><code>InfiniteOpt.add_measure_variable</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.add_measure_variable(model::JuMP.Model,
+                                 var::InfiniteOpt.PointVariable,
+                                 key::Val{:TransData}
+                                 )::InfiniteOpt.PointVariableRef</code></pre><p>Make a <code>PointVariableRef</code> and map it to the appropriate transcription variable and return the <code>PointVariableRef</code>. This is an extension of <a href="../measure/#InfiniteOpt.add_measure_variable-Tuple{Model,Any,Any}"><code>add_measure_variable</code></a> for <code>TranscriptionOpt</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/measures.jl#LL1-L11">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.add_measure_variable-Tuple{Model,ReducedInfiniteInfo,Val{:TransData}}" href="#InfiniteOpt.add_measure_variable-Tuple{Model,ReducedInfiniteInfo,Val{:TransData}}"><code>InfiniteOpt.add_measure_variable</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.add_measure_variable(model::JuMP.Model,
+                                 var::InfiniteOpt.ReducedInfiniteInfo,
+                                 key::Val{:TransData}
+                                 )::InfiniteOpt.ReducedInfiniteVariableRef</code></pre><p>Make a <code>ReducedInfiniteVariableRef</code> and add <code>var</code> to the trascription data and return the <code>ReducedInfiniteVariableRef</code>. This is an extension of <a href="../measure/#InfiniteOpt.add_measure_variable-Tuple{Model,Any,Any}"><code>add_measure_variable</code></a> for <code>TranscriptionOpt</code>. Note that <code>reduction_info</code> is also extended to be able to access the <code>var</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/measures.jl#LL25-L36">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.delete_reduced_variable-Tuple{Model,ReducedInfiniteVariableRef,Val{:TransData}}" href="#InfiniteOpt.delete_reduced_variable-Tuple{Model,ReducedInfiniteVariableRef,Val{:TransData}}"><code>InfiniteOpt.delete_reduced_variable</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.delete_reduced_variable(model::JuMP.Model,
+                                    vref::InfiniteOpt.ReducedInfiniteVariableRef,
+                                    key::Val{:TransData})</code></pre><p>Delete the reduced variable associated with <code>vref</code> from the optimizer model <code>model</code> if it was generated by <code>add_measure_variable</code>. This is an extension of <a href="../measure/#InfiniteOpt.delete_reduced_variable-Tuple{Model,Any,Any}"><code>delete_reduced_variable</code></a> for use in <code>TranscriptionOpt</code>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/measures.jl#LL69-L78">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="InfiniteOpt.reduction_info-Tuple{ReducedInfiniteVariableRef,Val{:TransData}}" href="#InfiniteOpt.reduction_info-Tuple{ReducedInfiniteVariableRef,Val{:TransData}}"><code>InfiniteOpt.reduction_info</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">InfiniteOpt.reduction_info(vref::InfiniteOpt.ReducedInfiniteVariableRef,
+                           key::Val{:TransData}
+                           )::InfiniteOpt.ReducedInfiniteInfo</code></pre><p>Return the <code>ReducedInfiniteInfo</code> in connection with <code>vref</code> that was added via <code>add_measure_variable</code>. This is an extension of <a href="../measure/#InfiniteOpt.reduction_info-Tuple{ReducedInfiniteVariableRef,Any}"><code>reduction_info</code></a>.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/ab7e56a4183abd10e001ca30b2fbd9dc996c26f0/src/TranscriptionOpt/measures.jl#LL53-L61">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../constraint/">« Constraints</a><a class="docs-footer-nextpage" href="../optimize/">Optimization »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 8 April 2020 19:31">Wednesday 8 April 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

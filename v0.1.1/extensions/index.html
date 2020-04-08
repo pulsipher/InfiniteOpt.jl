@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Extensions · InfiniteOpt.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.png" alt="InfiniteOpt.jl logo"/><img class="docs-dark-only" src="../assets/logo-dark.png" alt="InfiniteOpt.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">InfiniteOpt.jl</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">User Guide</span><ul><li><a class="tocitem" href="../guide/install/">Installation</a></li><li><a class="tocitem" href="../guide/model/">Infinite Models</a></li><li><a class="tocitem" href="../guide/sets/">Infinite Sets</a></li><li><a class="tocitem" href="../guide/parameter/">Infinite Parameters</a></li><li><a class="tocitem" href="../guide/finite_parameter/">Finite Parameters</a></li><li><a class="tocitem" href="../guide/variable/">Variables</a></li><li><a class="tocitem" href="../guide/expression/">Expressions</a></li><li><a class="tocitem" href="../guide/measure/">Measures</a></li><li><a class="tocitem" href="../guide/objective/">Objectives</a></li><li><a class="tocitem" href="../guide/constraint/">Constraints</a></li><li><a class="tocitem" href="../guide/transcribe/">Model Transcription</a></li><li><a class="tocitem" href="../guide/optimize/">Optimization</a></li><li><a class="tocitem" href="../guide/result/">Results</a></li></ul></li><li><a class="tocitem" href="../examples/">Examples</a></li><li class="is-active"><a class="tocitem" href>Extensions</a><ul class="internal"><li><a class="tocitem" href="#Overview-1"><span>Overview</span></a></li><li><a class="tocitem" href="#Infinite-Sets-1"><span>Infinite Sets</span></a></li><li><a class="tocitem" href="#Measure-Evaluation-Techniques-1"><span>Measure Evaluation Techniques</span></a></li><li><a class="tocitem" href="#Measure-Data-1"><span>Measure Data</span></a></li><li><a class="tocitem" href="#extend_optimizer_model-1"><span>Optimizer Models</span></a></li><li><a class="tocitem" href="#Wrapper-Packages-1"><span>Wrapper Packages</span></a></li></ul></li><li><a class="tocitem" href="../develop/">Development</a></li><li><a class="tocitem" href="../library/">Library</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Extensions</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Extensions</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/docs/src/extensions.md#L" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Extensions-1"><a class="docs-heading-anchor" href="#Extensions-1">Extensions</a><a class="docs-heading-anchor-permalink" href="#Extensions-1" title="Permalink"></a></h1><p>Here we provide guidance to various ways <code>InfinitOpt</code> can be extended.</p><h2 id="Overview-1"><a class="docs-heading-anchor" href="#Overview-1">Overview</a><a class="docs-heading-anchor-permalink" href="#Overview-1" title="Permalink"></a></h2><p>Extendibility is one of the core ideas of <code>InfinitOpt</code> so that it can serve as a convenient tool for those developing and implementing advanced techniques for infinite dimensional optimization problems. Thus, <code>InfiniteOpt</code> is developed in a modular manner to readily accommodate user-defined functionality and/or to serve as useful base in writing a <code>JuMP</code> extension. Admittedly, this modularity might be imperfect and comments/suggestions are welcomed to help us improve this.</p><h2 id="Infinite-Sets-1"><a class="docs-heading-anchor" href="#Infinite-Sets-1">Infinite Sets</a><a class="docs-heading-anchor-permalink" href="#Infinite-Sets-1" title="Permalink"></a></h2><p>Infinite sets are used to characterize the behavior of infinite parameters and used to govern the behavior of supports in <code>InfiniteOpt</code>. Here we walk through how user-defined sets can be added to various degrees of functionality. A template is provided in <a href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/test/extensions/infinite_set.jl"><code>./test/extensions/infinite_set.jl</code></a>. The extension steps employed are:</p><ol><li>Define the new <code>struct</code> infinite set type (only thing required as bare minimum)</li><li>Extend <a href="../guide/sets/#InfiniteOpt.supports_in_set"><code>InfiniteOpt.supports_in_set</code></a> (enables error checking of supports)</li><li>Extend <a href="../guide/sets/#InfiniteOpt.generate_support_values"><code>InfiniteOpt.generate_support_values</code></a> (enables support generation via <code>num_supports</code> keyword arguments)</li><li>Extend <a href="../guide/measure/#InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs"><code>InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs</code></a> (enables measure evaluation methods)</li><li>If a lower bound and upper bound can be reported, extend <code>JuMP</code> lower bound and upper bound methods</li></ol><p>As an example, let&#39;s create a disjoint interval set as an infinite set type. This corresponds to the set <span>$[lb_1, ub_1] \cup [lb_2, ub_2]$</span> where <span>$ub_1 \leq lb_2$</span>. First, we need to create the <code>DataType</code> with inheritance from <a href="../guide/sets/#InfiniteOpt.AbstractInfiniteSet"><code>AbstractInfiniteSet</code></a>:</p><pre><code class="language-julia">using InfiniteOpt, JuMP
+
+struct DisjointSet &lt;: InfiniteOpt.AbstractInfiniteSet
+    lb1::Float64
+    ub1::Float64
+    lb2::Float64
+    ub2::Float64
+    # constructor
+    function DisjointSet(lb1::Number, ub1::Number, lb2::Number, ub2::Number)
+        if lb1 &gt; ub1 || lb2 &gt; ub2 || ub1 &gt; lb2
+            error(&quot;Invalid bounds&quot;)
+        end
+        return new(convert(Float64, lb1), convert(Float64, ub1),
+                   convert(Float64, lb2), convert(Float64, ub2))
+    end
+end</code></pre><p>Notice that we also define the constructor function to error check and convert as needed (this is recommended, but not required). For basic functionality this is all we have to do to add a set in <code>InfiniteOpt</code>.</p><p>We can now define infinite parameters using this set via <a href="../guide/parameter/#InfiniteOpt.@infinite_parameter"><code>@infinite_parameter</code></a> both anonymously and explicitly:</p><pre><code class="language-julia-repl">julia&gt; model = InfiniteModel();
+
+julia&gt; t = @infinite_parameter(model, set = DisjointSet(0, 1, 3, 4), base_name = &quot;t&quot;)
+t
+
+julia&gt; @infinite_parameter(model, t in DisjointSet(0, 1, 3, 4))
+t</code></pre><p>Once defined (without further extension), these parameters can be used as normal with the following limitations:</p><ul><li>Supports must be specified manually (<code>num_supports</code> is not enabled)</li><li>Supports will not be checked if they are in the domain of the infinite set</li><li>The <a href="../guide/measure/#InfiniteOpt.DiscreteMeasureData"><code>DiscreteMeasureData</code></a> must be provided explicitly to evaluate measures</li><li>Set bounds cannot be queried.</li></ul><p>However, all of these limitations can be eliminated by extending a few functions as outlined above.</p><p>To enable support domain checking which is useful to avoid strange bugs, we will extend <a href="../guide/sets/#InfiniteOpt.supports_in_set"><code>InfiniteOpt.supports_in_set</code></a>. This returns a <code>Bool</code> to indicate if a vector of supports are in the set&#39;s domain:</p><pre><code class="language-julia">function InfiniteOpt.supports_in_set(supports::Union{Number, Vector{&lt;:Number}},
+                                     set::DisjointSet)::Bool
+    return all((set.lb1 .&lt;= supports .&lt;= set.ub1) .| (set.lb2 .&lt;= supports .&lt;= set.ub2))
+end</code></pre><p>Now the checks are enabled so, the following would yield an error because the support is not in the set domain:</p><pre><code class="language-julia-repl">julia&gt; @infinite_parameter(model, set = DisjointSet(0, 1, 3, 4), supports = 2)
+ERROR: In `@infinite_parameter(model, set = DisjointSet(0, 1, 3, 4), supports = 2)`: Supports violate the set domain bounds.</code></pre><p>To enable automatic support generation via the <code>num_supports</code> keyword and with functions such as <a href="../guide/parameter/#InfiniteOpt.fill_in_supports!-Tuple{InfiniteModel}"><code>fill_in_supports!</code></a>, we will extend <a href="../guide/sets/#InfiniteOpt.generate_support_values"><code>InfiniteOpt.generate_support_values</code></a>:</p><pre><code class="language-julia">function InfiniteOpt.generate_support_values(set::DisjointSet;
+                                             num_supports::Int = 50,
+                                             sig_fig::Int = 5)::Array
+    length_ratio = (set.ub1 - set.lb1) / (set.ub1 - set.lb1 + set.ub2 - set.lb2)
+    num_supports1 = Int64(ceil(length_ratio * num_supports))
+    num_supports2 = num_supports - num_supports1
+    supports1 = collect(range(set.lb1, stop = set.ub1, length = num_supports1))
+    supports2 = collect(range(set.lb2, stop = set.ub2, length = num_supports2))
+    return round.([supports1; supports2], sigdigits = sig_fig)
+end</code></pre><p>Now automatic support generation is enabled, for example:</p><pre><code class="language-julia-repl">julia&gt; par = @infinite_parameter(model, set = DisjointSet(0, 2, 3, 4), num_supports = 10)
+noname
+
+julia&gt; supports(par)
+10-element Array{Float64,1}:
+ 0.0
+ 0.33333
+ 0.66667
+ 1.0
+ 1.3333
+ 1.6667
+ 2.0
+ 3.0
+ 3.5
+ 4.0</code></pre><p>Note that in some cases <a href="../guide/sets/#InfiniteOpt.generate_support_values"><code>generate_support_values</code></a> might not be extendable since returning supports for a single infinite parameter may not be appropriate. This is typically true when a single set is used for multi-dimensional infinite parameters. In these cases, <a href="../guide/parameter/#InfiniteOpt.generate_and_add_supports!"><code>generate_and_add_supports!</code></a> will need to be extended. This is exemplified with multivariate distribution sets that correspond to an array of parameters where <code>generate_and_add_supports!</code> is extended to generate the supports and then add the appropriate slices to each dependent infinite parameter.</p><p>Next we can enable typical measure definition by extending <a href="../guide/measure/#InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs"><code>InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs</code></a> for our new set type. This function creates support values and corresponding coefficients for a measure using the <code>method</code> argument if appropriate. If we wish to ignore the <code>method</code> then we&#39;ll need to set <code>method::Any = Nothing</code> when extending this function. Continuing our example, we obtain:</p><pre><code class="language-julia">const JuMPC = JuMP.Containers
+
+function InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs(
+    set::DisjointSet,
+    params::Union{InfiniteOpt.ParameterRef, AbstractArray{&lt;:InfiniteOpt.ParameterRef}},
+    num_supports::Int,
+    lb::Union{Number, JuMPC.SparseAxisArray, Nothing},
+    ub::Union{Number, JuMPC.SparseAxisArray, Nothing},
+    method::Val)::Tuple
+    length_ratio = (set.ub1 - set.lb1) / (set.ub1 - set.lb1 + set.ub2 - set.lb2)
+    num_supports1 = Int64(ceil(length_ratio * num_supports))
+    num_supports2 = num_supports - num_supports1
+    supports1, coeffs1 = generate_supports_and_coeffs(IntervalSet(set.lb1, set.ub1), params, num_supports1, set.lb1, set.ub1, method)
+    supports2, coeffs2 = generate_supports_and_coeffs(IntervalSet(set.lb2, set.ub2), params, num_supports2, set.lb2, set.ub2, method)
+    return ([supports1; supports2], [coeffs1; coeffs2])
+end</code></pre><p>Now we can define measures as normal:</p><pre><code class="language-julia-repl">julia&gt; mref = integral(t^2, t)
+integral(t²)</code></pre><p>Finally, we can extend the appropriate <code>JuMP</code> upper and lower bound functions if desired which are:</p><ul><li><a href="../guide/sets/#JuMP.has_lower_bound-Tuple{AbstractInfiniteSet}"><code>JuMP.has_lower_bound</code></a></li><li><a href="../guide/sets/#JuMP.lower_bound-Tuple{AbstractInfiniteSet}"><code>JuMP.lower_bound</code></a></li><li><a href="../guide/sets/#JuMP.set_lower_bound-Tuple{AbstractInfiniteSet,Number}"><code>JuMP.set_lower_bound</code></a></li><li><a href="../guide/sets/#JuMP.has_upper_bound-Tuple{AbstractInfiniteSet}"><code>JuMP.has_upper_bound</code></a></li><li><a href="../guide/sets/#JuMP.upper_bound-Tuple{AbstractInfiniteSet}"><code>JuMP.upper_bound</code></a></li><li><a href="../guide/sets/#JuMP.set_upper_bound-Tuple{AbstractInfiniteSet,Number}"><code>JuMP.set_upper_bound</code></a></li></ul><p>However, if we want <code>has_lower_bound = false</code> and <code>has_upper_bound = false</code> then no extension is needed. For our current example we won&#39;t do this since lower and upper bounds aren&#39;t exactly clear for a disjoint interval. Please refer to the template in <code>./InfiniteOpt/test/extensions/infinite_set.jl</code> to see how this is done.</p><h2 id="Measure-Evaluation-Techniques-1"><a class="docs-heading-anchor" href="#Measure-Evaluation-Techniques-1">Measure Evaluation Techniques</a><a class="docs-heading-anchor-permalink" href="#Measure-Evaluation-Techniques-1" title="Permalink"></a></h2><p>Measure evaluation methods are used to dictate how to evaluate measures. Users may wish to apply evaluation methods other than Monte Carlo sampling and/or Gaussian quadrature methods. To create multiple measures using the same new evaluation methods, users may want to embed the new evaluation method under the <a href="../guide/measure/#InfiniteOpt.integral"><code>integral</code></a> function that does not require explicit construction of <a href="../guide/measure/#InfiniteOpt.AbstractMeasureData"><code>AbstractMeasureData</code></a>.</p><p>The basic way to do that is to write a function that creates <a href="../guide/measure/#InfiniteOpt.AbstractMeasureData"><code>AbstractMeasureData</code></a> object, and pass the object to the <a href="../guide/measure/#InfiniteOpt.measure"><code>measure</code></a>. For instance, let&#39;s consider defining a function that enables the definition of a uniform grid for a univariate or multivariate infinite parameter in <a href="../guide/sets/#InfiniteOpt.IntervalSet"><code>IntervalSet</code></a>. The function, denoted <code>uniform_grid</code>, generates uniform grid points as supports for univariate parameter and each component of independent multivariate parameter. The univariate version of this function can be defined as follows:</p><pre><code class="language-julia">function uniform_grid(param::ParameterRef, lb::Number, ub::Number, num_supports::Int; name::String = &quot;measure&quot;)::DiscreteMeasureData
+    increment = (ub - lb) / (num_supports - 1)
+    supps = [lb + (i - 1) * increment for i in 1:num_supports]
+    coeffs = ones(num_supports) / num_supports * (ub - lb)
+    return DiscreteMeasureData(param, coeffs, supps, name = name)
+end</code></pre><p>It is necessary to pass infinite parameter reference since the construction of measure data object needs parameter information. Now let&#39;s apply the new <code>uniform_grid</code> function to infinite parameters in intervals. We consider a time parameter <code>t</code> and 2D spatial parameter <code>x</code>, and two variables <code>f(t)</code> and <code>g(x)</code> parameterized by <code>t</code> and <code>x</code>, respectively:</p><pre><code class="language-julia-repl">julia&gt; m = InfiniteModel();
+
+julia&gt; @infinite_parameter(m, t in [0, 5]);
+
+julia&gt; @infinite_parameter(m, x[1:2] in [0, 1]);
+
+julia&gt; @infinite_variable(m, f(t));
+
+julia&gt; @infinite_variable(m, g(x));</code></pre><p>Now we can use <code>uniform_grid</code> to construct a <a href="../guide/measure/#InfiniteOpt.DiscreteMeasureData"><code>DiscreteMeasureData</code></a> and create a measure using the measure data, as shown below:</p><pre><code class="language-julia-repl">julia&gt; tdata = uniform_grid(t, 0, 5, 6)
+DiscreteMeasureData(t, [0.833333, 0.833333, 0.833333, 0.833333, 0.833333, 0.833333], [0.0, 1.0, 2.0, 3.0, 4.0, 5.0], &quot;measure&quot;, InfiniteOpt.default_weight)
+
+julia&gt; f_meas = measure(f, tdata)
+measure(f(t))
+
+julia&gt; expand(f_meas)
+0.8333333333333333 f(0) + 0.8333333333333333 f(1) + 0.8333333333333333 f(2) + 0.8333333333333333 f(3) + 0.8333333333333333 f(4) + 0.8333333333333333 f(5)
+</code></pre><p>An alternate way of extending new measure evaluation methods is to extend <a href="../guide/measure/#InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs"><code>InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs</code></a>. The will allow users to use their custom measure evaluation methods in the <a href="../guide/measure/#InfiniteOpt.integral"><code>integral</code></a> function that does not explicitly require a measure data object. A template for how such an extension is accomplished is provided in <a href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/test/extensions/measure_eval.jl"><code>./test/extensions/measure_eval.jl</code></a>. In general, such an extension can be created as follows:</p><ol><li>Define a new symbol (e.g. <code>my_new_fn</code>) that dispatches your function</li><li>Extend <a href="../guide/measure/#InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs"><code>InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs</code></a>,</li></ol><p>where <code>method</code> is of the type <code>Val{my_new_fn}</code>, and <code>set</code> needs to be a subtype of <a href="../guide/sets/#InfiniteOpt.AbstractInfiniteSet"><code>AbstractInfiniteSet</code></a> that you wish to apply the new evaluation method to.</p><p>For example, an extension of <a href="../guide/measure/#InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs"><code>InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs</code></a> that implements uniform grid for univariate and multivariate parameters in <a href="../guide/sets/#InfiniteOpt.IntervalSet"><code>IntervalSet</code></a> can be created as follows:</p><pre><code class="language-julia">const JuMPC = JuMP.Containers
+const unif_grid = :unif_grid
+function InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs(
+    set::InfiniteOpt.IntervalSet,
+    params::Union{InfiniteOpt.ParameterRef,
+    AbstractArray{&lt;:InfiniteOpt.ParameterRef}},
+    num_supports::Int,
+    lb::Number,
+    ub::Number,
+    method::Val{unif_grid})::Tuple
+    increment = (ub - lb) / (num_supports - 1)
+    supports = [lb + (i - 1) * increment for i in 1:num_supports]
+    return (supports, ones(num_supports) / num_supports * (ub - lb))
+end
+
+function InfiniteOpt.MeasureEvalMethods.generate_supports_and_coeffs(
+            set::InfiniteOpt.IntervalSet,
+            params::Union{InfiniteOpt.ParameterRef,
+                AbstractArray{&lt;:InfiniteOpt.ParameterRef}},
+            num_supports::Int,
+            lb::JuMPC.SparseAxisArray,
+            ub::JuMPC.SparseAxisArray,
+            method::Val{unif_grid}; independent::Bool = true)::Tuple
+    if !independent
+        @warn(&quot;The method is implemented for independent multivariate parameters.&quot;)
+    end
+    supports_dict = Dict()
+    for i in eachindex(lb)
+        (supports_dict[i], _) = generate_supports_and_coeffs(IntervalSet(lb[i], ub[i]), params[i], num_supports, lb[i], ub[i], Val(unif_grid))
+    end
+    supports = Array{JuMPC.SparseAxisArray{Float64}, 1}(undef, num_supports)
+    for j in 1:num_supports
+        supports[j] = JuMPC.SparseAxisArray(Dict(k =&gt; supports_dict[k][j] for k in eachindex(lb)))
+    end
+    return (supports, ones(num_supports) / num_supports * prod(ub .- lb))
+end</code></pre><p>The <code>unif_grid</code> symbol defined at the beginning helps <a href="../guide/measure/#InfiniteOpt.integral"><code>integral</code></a> dispatch to the custom function. Note that separate extensions are defined for univariate and multivariate parameters in <a href="../guide/sets/#InfiniteOpt.IntervalSet"><code>IntervalSet</code></a>. Each version has arguments that align with the method call structure and possible data types for positional arguments in the <a href="../guide/measure/#InfiniteOpt.MeasureEvalMethods.generate_measure_data"><code>generate_measure_data</code></a> function.</p><p>Also notice that users are free to pass keyword arguments for their new functions in addition to the required positional arguments. This might be needed in case if the new evaluation method requires additional information not captured in the default positional arguments. For example, the multivariate parameter version above needs to know if the multivariate parameter is independent in order to throw a warning when needed.</p><p>We create measure for <code>f</code> and <code>g</code> using the <code>uniform_grid</code> method</p><pre><code class="language-julia-repl">julia&gt; f_int = integral(f, t, num_supports = 6, eval_method = unif_grid)
+integral(f(t))
+
+julia&gt; g_int = integral(g, x, num_supports = 3, eval_method = unif_grid)
+integral(g(x))
+
+julia&gt; expand(f_int)
+0.8333333333333333 f(0) + 0.8333333333333333 f(1) + 0.8333333333333333 f(2) + 0.8333333333333333 f(3) + 0.8333333333333333 f(4) + 0.8333333333333333 f(5)
+
+julia&gt; expand(g_int)
+0.3333333333333333 g([0, 0]) + 0.3333333333333333 g([0.5, 0.5]) + 0.3333333333333333 g([1, 1])</code></pre><p>Here we go! We can freely use <code>unif_grid</code> for infinite parameters in <a href="../guide/sets/#InfiniteOpt.IntervalSet"><code>IntervalSet</code></a> now.</p><h2 id="Measure-Data-1"><a class="docs-heading-anchor" href="#Measure-Data-1">Measure Data</a><a class="docs-heading-anchor-permalink" href="#Measure-Data-1" title="Permalink"></a></h2><p>Measures are used to evaluate over infinite domains. Users may wish to employ measure abstractions that cannot be readily represented with coefficients and discretized supports, and thus may wish to extend <code>InfiniteOpt</code>&#39;s measure framework to accommodate other paradigms. This can be accomplished my implementing a user-defined measure data structure that inherits from <a href="../guide/measure/#InfiniteOpt.AbstractMeasureData"><code>AbstractMeasureData</code></a>. A template for how such an extension is accomplished is provided in <a href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/test/extensions/measure_data.jl"><code>./test/extensions/measure_data.jl</code></a>. The extension steps employed are:</p><ol><li>Define the new data struct inheriting from <a href="../guide/measure/#InfiniteOpt.AbstractMeasureData"><code>AbstractMeasureData</code></a> (required)</li><li>Extend <a href="../guide/measure/#InfiniteOpt.parameter_refs-Tuple{AbstractMeasureData}"><code>InfiniteOpt.parameter_refs</code></a> (required)</li><li>Extend <a href="../guide/measure/#InfiniteOpt.expand_measure"><code>InfiniteOpt.expand_measure</code></a> (required)</li><li>Extend <a href="../guide/measure/#InfiniteOpt.supports-Tuple{AbstractMeasureData}"><code>InfiniteOpt.supports</code></a> (required if parameter supports are employed in any way)</li><li>Extend <a href="../guide/measure/#InfiniteOpt.measure_data_in_hold_bounds"><code>InfiniteOpt.measure_data_in_hold_bounds</code></a> (enables hold variable bound checking with measures)</li><li>Extend <a href="../guide/measure/#InfiniteOpt.measure_name"><code>InfiniteOpt.measure_name</code></a> (enables meaningful measure naming)</li><li>Extend <a href="../guide/measure/#InfiniteOpt.coefficients"><code>InfiniteOpt.coefficients</code></a> (useful getter method if applicable)</li><li>Extend <a href="../guide/measure/#InfiniteOpt.weight_function"><code>InfiniteOpt.weight_function</code></a> (useful getter method if applicable)</li><li>Make simple measure constructor wrapper of <a href="../guide/measure/#InfiniteOpt.measure"><code>measure</code></a> to ease definition.</li></ol><p>To illustrate how this process can be done, let&#39;s consider extending <code>InfiniteOpt</code> to include measure for assessing the variance of random expressions. The variance of an expression <span>$f(x, \xi)$</span> where <span>$x \in \mathbb{R}^n$</span> are hold variables and <span>$\xi \in \mathbb{R}^m$</span> are random infinite parameters is defined:</p><div>\[\mathbb{V}[f(x, \xi)] = \mathbb{E}\left[(f(x, \xi) - \mathbb{E}[f(x, \xi)])^2 \right].\]</div><p>Note, we could just accomplish this by nested use of <a href="../guide/measure/#InfiniteOpt.expect"><code>expect</code></a>, but we implement this example to illustrate the mechanics of extension.</p><p>First, let&#39;s define our new <code>struct</code> inheriting from <code>AbstractMeasureData</code>:</p><pre><code class="language-julia">using InfiniteOpt, JuMP, Distributions
+
+const JuMPC = JuMP.Containers
+
+struct DiscreteVarianceData &lt;: AbstractMeasureData
+    parameter_refs::Union{ParameterRef, JuMPC.SparseAxisArray{&lt;:ParameterRef}}
+    supports::Vector
+    name::String
+    # constructor
+    function DiscreteVarianceData(
+        parameter_refs::Union{ParameterRef, AbstractArray{&lt;:ParameterRef}},
+        supports::Vector, name::String = &quot;Var&quot;)
+        # convert input as necessary to proper array format
+        if parameter_refs isa AbstractArray
+            parameter_refs = convert(JuMPC.SparseAxisArray, parameter_refs)
+            supports = [convert(JuMPC.SparseAxisArray, arr) for arr in supports]
+        end
+        return new(parameter_refs, supports, name)
+    end
+end</code></pre><p>We have defined our data type, so let&#39;s extend the measure data query methods to enable its definition. These include <a href="../guide/measure/#InfiniteOpt.parameter_refs-Tuple{AbstractMeasureData}"><code>parameter_refs</code></a>, <a href="../guide/measure/#InfiniteOpt.supports-Tuple{AbstractMeasureData}"><code>supports</code></a>, and <a href="../guide/measure/#InfiniteOpt.measure_name"><code>measure_name</code></a> (optional):</p><pre><code class="language-julia">function InfiniteOpt.parameter_refs(data::DiscreteVarianceData)
+    return data.parameter_refs
+end
+
+function InfiniteOpt.supports(data::DiscreteVarianceData)::Vector
+    return data.supports
+end
+
+function InfiniteOpt.measure_name(data::DiscreteVarianceData)::String
+    return data.name
+end</code></pre><p>Note that extending <code>supports</code> is not needed for abstractions that don&#39;t involve discretization of the infinite parameter(s), such as the case for outer certain outer approximation techniques. Our extension is now sufficiently constructor to allow us to define out new variance measure via <a href="../guide/measure/#InfiniteOpt.measure"><code>measure</code></a>. For example,</p><pre><code class="language-julia"># Setup the infinite model
+model = InfiniteModel()
+@infinite_parameter(model, xi in Normal(), num_supports = 2) # few for simplicity
+@infinite_variable(model, y(xi))
+@hold_variable(model, z)
+
+# Define out new variance measure
+data = DiscreteVarianceData(xi, supports(xi))
+mref = measure(2y + z, data)
+
+# output
+Var(2 y(xi) + z)</code></pre><p>Thus, we can define measure references that employ this our new data type.</p><p>We can define variance measures now, but now let&#39;s extend <a href="../guide/measure/#InfiniteOpt.expand_measure"><code>expand_measure</code></a> so that they can be expanded into finite expressions:</p><pre><code class="language-julia">function InfiniteOpt.expand_measure(expr::JuMP.AbstractJuMPScalar,
+                                    data::DiscreteVarianceData,
+                                    write_model::JuMP.AbstractModel
+                                    )::JuMP.AbstractJuMPScalar
+    # define the expectation data
+    expect_data = DiscreteMeasureData(
+                      data.parameter_refs,
+                      1 / length(data.supports) * ones(length(data.supports)),
+                      data.supports, name = data.name)
+    # define the mean
+    mean = measure(expr, expect_data)
+    # return the expansion of the variance using the data mean
+    return expand_measure((copy(expr) - mean)^2, expect_data, write_model)
+end</code></pre><p>Notice that we reformulated our abstraction in terms of measures with <a href="../guide/measure/#InfiniteOpt.DiscreteMeasureData"><code>DiscreteMeasureData</code></a> so that we could leverage the existing <a href="../guide/measure/#InfiniteOpt.expand_measure"><code>expand_measure</code></a> library. Now, new measure type can be expanded and moreover infinite models using this new type can be optimized. Let&#39;s try expanding the measure we already defined:</p><pre><code class="language-julia-repl">julia&gt; expand(mref)
+2 y(-0.55603)² + 2 z*y(-0.55603) - 2 y(-0.55603)² - 2 y(-0.44438)*y(-0.55603) - 2 z*y(-0.55603) + 0 z² - y(-0.55603)*z - y(-0.44438)*z + 0.5 y(-0.55603)² + 0.5 y(-0.55603)*y(-0.44438) + 0.5 y(-0.55603)*z + 0.5 y(-0.44438)*y(-0.55603) + 0.5 y(-0.44438)² + 0.5 y(-0.44438)*z + 0.5 z*y(-0.55603) + 0.5 z*y(-0.44438) + 2 y(-0.44438)² + 2 z*y(-0.44438) - 2 y(-0.55603)*y(-0.44438) - 2 y(-0.44438)² - 2 z*y(-0.44438) - y(-0.55603)*z - y(-0.44438)*z + 0.5 y(-0.55603)² + 0.5 y(-0.55603)*y(-0.44438) + 0.5 y(-0.55603)*z + 0.5 y(-0.44438)*y(-0.55603) + 0.5 y(-0.44438)² + 0.5 y(-0.44438)*z + 0.5 z*y(-0.55603) + 0.5 z*y(-0.44438)</code></pre><p>Finally, as per recommendation let&#39;s make a wrapper method to make defining variance measures more convenient:</p><pre><code class="language-julia">function variance(expr::Union{JuMP.GenericAffExpr, GeneralVariableRef},
+                  params::Union{ParameterRef, AbstractArray{&lt;:ParameterRef}};
+                  name::String = &quot;Var&quot;, num_supports::Int = 10,
+                  use_existing::Bool = false)::MeasureRef
+    # get the supports
+    if use_existing
+        supps = supports.(params)
+    else
+        supps = generate_support_values(infinite_set(first(params)),
+                                           num_supports = num_supports)
+    end
+    # make the data
+    data = DiscreteVarianceData(params, supps, name)
+    # built the measure
+    return measure(expr, data)
+end</code></pre><p>Notice in this case that we only permit linear expressions for <code>expr</code> since it will be squared by our new measure and we currently only support quadratic expressions. (This could be overcome by defining place a place holder variable for <code>expr</code>.</p><p>Now let&#39;s use our constructor to repeat the above measure example:</p><pre><code class="language-julia-repl">julia&gt; expand(variance(2y + z, xi, use_existing = true))
+2 y(-0.55603)² + 2 z*y(-0.55603) - 2 y(-0.55603)² - 2 y(-0.44438)*y(-0.55603) - 2 z*y(-0.55603) + 0 z² - y(-0.55603)*z - y(-0.44438)*z + 0.5 y(-0.55603)² + 0.5 y(-0.55603)*y(-0.44438) + 0.5 y(-0.55603)*z + 0.5 y(-0.44438)*y(-0.55603) + 0.5 y(-0.44438)² + 0.5 y(-0.44438)*z + 0.5 z*y(-0.55603) + 0.5 z*y(-0.44438) + 2 y(-0.44438)² + 2 z*y(-0.44438) - 2 y(-0.55603)*y(-0.44438) - 2 y(-0.44438)² - 2 z*y(-0.44438) - y(-0.55603)*z - y(-0.44438)*z + 0.5 y(-0.55603)² + 0.5 y(-0.55603)*y(-0.44438) + 0.5 y(-0.55603)*z + 0.5 y(-0.44438)*y(-0.55603) + 0.5 y(-0.44438)² + 0.5 y(-0.44438)*z + 0.5 z*y(-0.55603) + 0.5 z*y(-0.44438)</code></pre><p>We have done it! Now go and extend away!</p><h2 id="extend_optimizer_model-1"><a class="docs-heading-anchor" href="#extend_optimizer_model-1">Optimizer Models</a><a class="docs-heading-anchor-permalink" href="#extend_optimizer_model-1" title="Permalink"></a></h2><p><code>InfiniteOpt</code> provides a convenient interface and abstraction for modeling infinite dimensional optimization problems. By default, <code>InfiniteModel</code>s are reformulated into a solvable <code>JuMP.Model</code> (referred to as an optimizer model) via <code>TranscriptionOpt</code> which discretizes the model in accordance with the infinite parameter supports. However, users may wish to employ some other reformulation method to produce the optimizer model. This section will explain how this can be done in <code>InfiniteOpt</code>. A template for implementing this extension is provided in <a href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/test/extensions/optimizer_model.jl"><code>./test/extensions/optimizer_model.jl</code></a>. Our default sub-package <code>InfiniteOpt.TranscriptionOpt</code> also serves as a good example.</p><p>A new reformulation method and its corresponding optimizer model can be extended using the following steps:</p><ol><li>Define a <code>mutable struct</code> for variable/constraint mappings and other needed info (required)</li><li>Define a <code>JuMP.Model</code> constructor that uses (1.) in <code>Model.ext[:my_ext_key]</code> (recommended)</li><li>Extend <a href="../guide/optimize/#InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel}"><code>build_optimizer_model!</code></a> to in accordance with the new optimizer model (required)</li><li>Extend <a href="../guide/optimize/#InfiniteOpt.optimizer_model_variable"><code>optimizer_model_variable</code></a> if possible (enables result queries)</li><li>Extend <a href="../guide/optimize/#InfiniteOpt.optimizer_model_constraint"><code>optimizer_model_constraint</code></a> if possible (enables result queries)</li><li>Extend <a href="../guide/optimize/#InfiniteOpt.variable_supports"><code>variable_supports</code></a> if appropriate</li><li>Extend <a href="../guide/optimize/#InfiniteOpt.constraint_supports"><code>constraint_supports</code></a> and <a href="../guide/optimize/#InfiniteOpt.constraint_parameter_refs"><code>constraint_parameter_refs</code></a> if appropriate</li><li>If steps 4 &amp; 5 are skipped then extend the following:<ul><li><a href="../guide/result/#InfiniteOpt.map_value"><code>map_value</code></a> (enables <code>JuMP.value</code>)</li><li><a href="../guide/result/#InfiniteOpt.map_optimizer_index"><code>map_optimizer_index</code></a> (enables <code>JuMP.optimizer_index</code>)</li><li><a href="../guide/result/#InfiniteOpt.map_dual"><code>map_dual</code></a> (enables <code>JuMP.dual</code>)</li><li><a href="../guide/result/#InfiniteOpt.map_shadow_price"><code>map_shadow_price</code></a> (enables <code>JuMP.shadow_price</code>)</li><li><a href="../guide/result/#InfiniteOpt.map_lp_rhs_perturbation_range"><code>map_lp_rhs_perturbation_range</code></a> (enables <code>JuMP.lp_rhs_perturbation_range</code>)</li><li><a href="../guide/result/#InfiniteOpt.map_lp_objective_perturbation_range"><code>map_lp_objective_perturbation_range</code></a> (enables <code>JuMP.lp_objective_perturbation_range</code>)</li></ul></li><li>Extend <a href="../guide/measure/#InfiniteOpt.add_measure_variable-Tuple{Model,Any,Any}"><code>add_measure_variable</code></a> to use <a href="../guide/measure/#InfiniteOpt.expand_measure"><code>expand_measure</code></a> without modifying the infinite model</li><li>Extend <a href="../guide/measure/#InfiniteOpt.delete_reduced_variable-Tuple{Model,Any,Any}"><code>delete_reduced_variable</code></a> to use <a href="../guide/measure/#InfiniteOpt.expand_measure"><code>expand_measure</code></a> without modifying the infinite model and delete unneeded reduced variables.</li></ol><p>For the sake of example, let&#39;s suppose we want to define a reformulation method for <code>InfiniteModel</code>s that are 2-stage stochastic programs (i.e., only <code>DistributionSet</code>s are used, infinite variables are random 2nd stage variables, and hold variables are 1st stage variables). In particular, let&#39;s make a simple method that replaces the infinite parameters with their mean values, giving us the deterministic mean-valued problem.</p><p>First, let&#39;s define the <code>mutable struct</code> that will be used to store our variable and constraint mappings. This this case it is quite simple since our deterministic model will have a 1-to-1 mapping:</p><pre><code class="language-julia">using InfiniteOpt, JuMP, Distributions
+
+mutable struct DeterministicData
+    # variable and constraint mapping
+    infvar_to_detvar::Dict{GeneralVariableRef, VariableRef}
+    infconstr_to_detconstr::Dict{GeneralConstraintRef, ConstraintRef}
+    # constructor
+    function DeterministicData()
+        return new(Dict{GeneralVariableRef, VariableRef}(),
+                   Dict{GeneralConstraintRef, ConstraintRef}())
+    end
+end</code></pre><p>Now let&#39;s define a constructor for optimizer models that will use <code>DeterministicData</code> and let&#39;s define a method to access that data:</p><pre><code class="language-julia">function DeterministicModel(args...; kwargs...)::Model
+    # initialize the JuMP Model
+    model = Model(args...; kwargs...)
+    model.ext[:DetermData] = DeterministicData()
+    return model
+end
+
+function deterministic_data(model::Model)::DeterministicData
+    haskey(model.ext, :DetermData) || error(&quot;Model is not a DeterministicModel.&quot;)
+    return model.ext[:DetermData]
+end</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The use of an extension key such as <code>:DetermData</code> is key since it used to dispatch reformulation and querying methods making optimizer model extensions possible.</p></div></div><p>With the constructor we can now specify that a given <code>InfiniteModel</code> uses a <code>DeterministicModel</code> instead of a <code>TranscriptionModel</code> using the <code>OptimizerModel</code> keyword argument or via <a href="../guide/optimize/#InfiniteOpt.set_optimizer_model"><code>set_optimizer_model</code></a>:</p><pre><code class="language-julia">using Ipopt
+
+# Make model using Ipopt and DeterministicModels
+model = InfiniteModel(optimizer_with_attributes(Ipopt.Optimizer, &quot;print_level&quot; =&gt; 0),
+                      OptimizerModel = DeterministicModel)
+
+# Or equivalently
+model = InfiniteModel()
+set_optimizer_model(model, DeterministicModel())
+set_optimizer(model, optimizer_with_attributes(Ipopt.Optimizer, &quot;print_level&quot; =&gt; 0))</code></pre><p>Now <code>model</code> uses a <code>DeterministicModel</code> as its optimizer model! With that we can build our <code>InfiniteModel</code> as normal, for example:</p><pre><code class="language-julia">@infinite_parameter(model, ξ in Uniform())
+@infinite_variable(model, y[1:2](ξ) &gt;= 0)
+@hold_variable(model, x)
+@objective(model, Min, x + expect(y[1] + y[2], ξ))
+@constraint(model, 2y[1] - x &lt;= 42)
+@constraint(model, y[2]^2 + ξ == 2)
+print(model)
+
+# output
+Min x + expect(y[1](ξ) + y[2](ξ))
+Subject to
+ y[1](ξ) ≥ 0.0
+ y[2](ξ) ≥ 0.0
+ 2 y[1](ξ) - x ≤ 42.0
+ y[2](ξ)² + ξ = 2.0
+ ξ ∈ Uniform(a=0.0, b=1.0)</code></pre><p>We have defined our <code>InfiniteModel</code>, but now we need to specify how to reformulate it into a <code>DeterministicModel</code>. This is accomplished by extending <a href="../guide/optimize/#InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel}"><code>build_optimizer_model!</code></a>. This will enable the use of <code>optimize!</code>. First, let&#39;s define an internal function <code>_make_expression</code> that will use dispatch to convert and <code>InfiniteOpt</code> expression into a <code>JuMP</code> expression using the mappings stored in <code>opt_model</code> in its <code>DeterministicData</code>:</p><pre><code class="language-julia">## Make dispatch methods for converting InfiniteOpt expressions
+# ParameterRef
+function _make_expression(opt_model::Model, expr::ParameterRef)
+    return mean(infinite_set(expr).distribution) # assuming univariate
+end
+# InfOptVariableRef
+function _make_expression(opt_model::Model, expr::InfOptVariableRef)
+    return deterministic_data(opt_model).infvar_to_detvar[expr]
+end
+# MeasureRef --&gt; assume is expectation
+function _make_expression(opt_model::Model, expr::MeasureRef)
+    return _make_expression(opt_model, measure_function(expr))
+end
+# AffExpr
+function _make_expression(opt_model::Model, expr::GenericAffExpr)
+    new_expr = zero(AffExpr)
+    for (vref, coef) in expr.terms
+        add_to_expression!(new_expr, coef, _make_expression(opt_model, vref))
+    end
+    new_expr.constant += expr.constant
+    return new_expr
+end
+# QuadExpr
+function _make_expression(opt_model::Model, expr::GenericQuadExpr)
+    new_expr = zero(QuadExpr)
+    for (pair, coef) in expr.terms
+        add_to_expression!(new_expr, coef, _make_expression(opt_model, pair.a),
+                           _make_expression(opt_model, pair.b))
+    end
+    new_expr.aff = _make_expression(opt_model, expr.aff)
+    return new_expr
+end</code></pre><p>For simplicity in example, above we assume that only <code>DistributionSet</code>s are used, there are <code>PointVariableRef</code>s, and all <code>MeasureRef</code>s correspond to expectations. Naturally, a full extension should include checks to enforce that such assumptions hold.</p><p>Now let&#39;s extend <a href="../guide/optimize/#InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel}"><code>build_optimizer_model!</code></a> for <code>DeterministicModel</code>s. Such extensions should build an optimizer model in place and in general should employ the following:</p><ul><li><a href="../guide/optimize/#InfiniteOpt.clear_optimizer_model_build!-Tuple{InfiniteModel}"><code>clear_optimizer_model_build!</code></a></li><li><a href="../guide/optimize/#InfiniteOpt.set_optimizer_model_ready"><code>set_optimizer_model_ready</code></a>.</li></ul><p>In place builds without the use of <code>clear_optimizer_model_build!</code> are also possible, but will require some sort of active mapping scheme to update in accordance with the <code>InfiniteModel</code> in the case that the optimizer model is built more than once. Thus, for simplicity we extend <code>build_optimizer_model!</code> below using an initial clearing scheme:</p><pre><code class="language-julia">function InfiniteOpt.build_optimizer_model!(model::InfiniteModel,
+                                            key::Val{:DetermData})
+    # TODO check that `model` is a stochastic model
+    # clear the model for a build/rebuild
+    determ_model = clear_optimizer_model_build!(model)
+
+    # add variables
+    for vref in all_variables(model)
+        new_vref = add_variable(determ_model,
+                                ScalarVariable(model.vars[index(vref)].info),
+                                name(vref)) # TODO update infinite variable names
+        deterministic_data(determ_model).infvar_to_detvar[vref] = new_vref
+    end
+
+    # add the objective
+    set_objective(determ_model, objective_sense(model),
+                   _make_expression(determ_model, objective_function(model)))
+
+    # add the constraints
+    for cref in all_constraints(model)
+        if !model.constr_in_var_info[index(cref)]
+            constr = constraint_object(cref)
+            new_constr = build_constraint(error, _make_expression(determ_model, constr.func),
+                                          constr.set)
+            new_cref = add_constraint(determ_model, new_constr, name(cref))
+            deterministic_data(determ_model).infconstr_to_detconstr[cref] = new_cref
+        end
+    end
+
+    # update the status
+    set_optimizer_model_ready(model, true)
+    return
+end</code></pre><p>Now we can build our optimizer model to obtain a <code>DeterministicModel</code> which can be leveraged to call <code>optimize!</code></p><pre><code class="language-julia">optimize!(model)
+print(optimizer_model(model))
+
+# output
+Min x + y[1](ξ) + y[2](ξ)
+Subject to
+ 2 y[1](ξ) - x ≤ 42.0
+ y[2](ξ)² = 1.5
+ y[1](ξ) ≥ 0.0
+ y[2](ξ) ≥ 0.0</code></pre><p>Note that batter variable naming could be used with the reformulated infinite variables. Moreover, in general extensions of <a href="../guide/optimize/#InfiniteOpt.build_optimizer_model!-Tuple{InfiniteModel}"><code>build_optimizer_model!</code></a> should account for the possibility that <code>InfiniteModel</code> contains <code>HoldVariable</code>s and/or <code>ScalarConstraint</code>s that contain <a href="../guide/variable/#InfiniteOpt.ParameterBounds"><code>ParameterBounds</code></a> as accessed via <a href="../guide/constraint/#InfiniteOpt.parameter_bounds-Tuple{GeneralConstraintRef}"><code>parameter_bounds</code></a>.</p><p>Now that we have optimized out <code>InfiniteModel</code> via the use the of a <code>DeterministicModel</code>, we probably will want to access the results. All queries are enabled when we extend <a href="../guide/optimize/#InfiniteOpt.optimizer_model_variable"><code>optimizer_model_variable</code></a> and <a href="../guide/optimize/#InfiniteOpt.optimizer_model_constraint"><code>optimizer_model_constraint</code></a> return the variable(s)/constraint(s) in the optimizer model corresponding to their <code>InfiniteModel</code> counterparts. These will use the <code>mutable struct</code> of mapping data and should error if no mapping can be found, Let&#39;s continue our example using <code>DeterministicModel</code>s:</p><pre><code class="language-julia">function InfiniteOpt.optimizer_model_variable(vref::InfOptVariableRef,
+                                              key::Val{:DetermData})
+    model = optimizer_model(JuMP.owner_model(vref))
+    map_dict = deterministic_data(model).infvar_to_detvar
+    haskey(map_dict, vref) || error(&quot;Variable $vref not used in the optimizer model.&quot;)
+    return map_dict[vref]
+end
+
+function InfiniteOpt.optimizer_model_constraint(cref::GeneralConstraintRef,
+                                                key::Val{:DetermData})
+    model = optimizer_model(JuMP.owner_model(cref))
+    map_dict = deterministic_data(model).infconstr_to_detconstr
+    haskey(map_dict, cref) || error(&quot;Constraint $cref not used in the optimizer model.&quot;)
+    return map_dict[cref]
+end</code></pre><p>With these extensions we can now access all the result queries. For example,</p><pre><code class="language-julia-repl">julia&gt; termination_status(model)
+LOCALLY_SOLVED::TerminationStatusCode = 4
+
+julia&gt; result_count(model)
+1
+
+julia&gt; value.(y)
+2-element Array{Float64,1}:
+ 0.0
+ 1.224744871391589
+
+julia&gt; optimizer_index(x)
+MathOptInterface.VariableIndex(3)</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>If <a href="../guide/optimize/#InfiniteOpt.optimizer_model_variable"><code>optimizer_model_variable</code></a> and <a href="../guide/optimize/#InfiniteOpt.optimizer_model_constraint"><code>optimizer_model_constraint</code></a> cannot be extended due to the nature of the reformulation then please refer to step 8 of the extension steps listed at the beginning of this section.</p></div></div><p>Furthermore, if appropriate for the given reformulation the following should be extended:</p><ul><li><a href="../guide/optimize/#InfiniteOpt.variable_supports"><code>variable_supports</code></a> to enable <a href="../guide/optimize/#InfiniteOpt.supports-Tuple{InfiniteVariableRef}"><code>supports</code></a></li><li><a href="../guide/optimize/#InfiniteOpt.constraint_supports"><code>constraint_supports</code></a> to enable <a href="../guide/optimize/#InfiniteOpt.supports-Tuple{GeneralConstraintRef}"><code>supports</code></a></li><li><a href="../guide/optimize/#InfiniteOpt.constraint_parameter_refs"><code>constraint_parameter_refs</code></a> to enable <a href="../guide/optimize/#InfiniteOpt.parameter_refs-Tuple{GeneralConstraintRef}"><code>parameter_refs</code></a></li></ul><p>That&#39;s it!</p><h2 id="Wrapper-Packages-1"><a class="docs-heading-anchor" href="#Wrapper-Packages-1">Wrapper Packages</a><a class="docs-heading-anchor-permalink" href="#Wrapper-Packages-1" title="Permalink"></a></h2><p><code>InfiniteOpt</code> provides a convenient modular interface for defining infinite dimensional optimization problems, implementing many tedious <code>JuMP</code> extensions such as facilitating mixed variable expressions. Thus, <code>InfiniteOpt</code> can serve as a base package for specific types of infinite dimensional problems and/or solution techniques. These extension packages can implement any of the extensions shown above and likely will want to introduce wrapper functions and macros to use package specific terminology (e.g., using random variables instead of infinite variables).</p><p>TODO refer to example packages that do this (e.g., an update of FlexibilityAnalysis.jl)</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../examples/">« Examples</a><a class="docs-footer-nextpage" href="../develop/">Development »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 8 April 2020 19:31">Wednesday 8 April 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
