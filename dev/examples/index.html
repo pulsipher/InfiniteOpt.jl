@@ -54,7 +54,7 @@ set_optimizer_attribute(model, &quot;print_level&quot;, 0)
 
 # Define the objective
 @objective(model, Min, sum(α[c] * x[c] for c in C) +
-           expect(sum(β[c] * y[c] - λ[c] * w[c] for c in C), ξ))
+           𝔼(sum(β[c] * y[c] - λ[c] * w[c] for c in C), ξ))
 
 # Define the constraints
 @constraint(model, capacity, sum(x[c] for c in C) &lt;= xbar)
@@ -85,7 +85,7 @@ Expected Profit: $57099.53</code></pre><p>We did it! An interesting modification
 @infinite_variable(model, q(ξ) &gt;= 0)
 
 # Redefine the objective
-@objective(model, Min, sum(α[c] * x[c] for c in C) + t + 1 \ (1 - 0.95) * expect(q, ξ))
+@objective(model, Min, sum(α[c] * x[c] for c in C) + t + 1 \ (1 - 0.95) * 𝔼(q, ξ))
 
 # Add the max constraint
 @constraint(model, max, q &gt;= sum(β[c] * y[c] - λ[c] * w[c] for c in C) - t)
@@ -123,14 +123,14 @@ m = InfiniteModel(optimizer_with_attributes(Ipopt.Optimizer, &quot;print_level&q
 @infinite_variable(m, u[1:2](t), start = 0) # thruster input
 
 # Specify the objective
-@objective(m, Min, integral(u[1]^2 + u[2]^2, t))
+@objective(m, Min, ∫(u[1]^2 + u[2]^2, t))
 
 # Set the initial conditions
 @BDconstraint(m, initial_velocity[i = 1:2](t == 0), v[i] == 0)
 
 # Define the point physics
-@constraint(m, [i = 1:2], deriv(x[i], t) == v[i])
-@constraint(m, [i = 1:2], deriv(v[i], t) == u[i])
+@constraint(m, [i = 1:2], ∂(x[i], t) == v[i])
+@constraint(m, [i = 1:2], ∂(v[i], t) == u[i])
 
 # Hit all the waypoints
 @BDconstraint(m, [i = 1:2, j = eachindex(tw)](t == tw[j]), x[i] == xw[i, j])
@@ -149,4 +149,4 @@ scatter(xw[1,:], xw[2,:], label = &quot;Waypoints&quot;)
 plot(x_opt[1], x_opt[2], label = &quot;Trajectory&quot;, color = &quot;C1&quot;)
 xlabel(L&quot;$x_1$&quot;)
 ylabel(L&quot;$x_2$&quot;)
-legend()</code></pre><p><img src="../assets/hovercraft.png" alt="answer"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../guide/result/">« Results</a><a class="docs-footer-nextpage" href="../extensions/">Extensions »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 22 October 2020 15:18">Thursday 22 October 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+legend()</code></pre><p><img src="../assets/hovercraft.png" alt="answer"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../guide/result/">« Results</a><a class="docs-footer-nextpage" href="../extensions/">Extensions »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 24 October 2020 15:59">Saturday 24 October 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
