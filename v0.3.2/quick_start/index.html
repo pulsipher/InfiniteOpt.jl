@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Quick Start Guide · InfiniteOpt.jl</title><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-178297470-1', 'auto');
+ga('send', 'pageview', {'page': location.pathname + location.search + location.hash});
+</script><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.png" alt="InfiniteOpt.jl logo"/><img class="docs-dark-only" src="../assets/logo-dark.png" alt="InfiniteOpt.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">InfiniteOpt.jl</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>Quick Start Guide</a><ul class="internal"><li><a class="tocitem" href="#Preliminaries"><span>Preliminaries</span></a></li><li><a class="tocitem" href="#Model-Definition"><span>Model Definition</span></a></li><li><a class="tocitem" href="#Solution-and-Queries"><span>Solution &amp; Queries</span></a></li><li><a class="tocitem" href="#Summary-Script"><span>Summary Script</span></a></li></ul></li><li><span class="tocitem">User Guide</span><ul><li><a class="tocitem" href="../guide/install/">Installation</a></li><li><a class="tocitem" href="../guide/model/">Infinite Models</a></li><li><a class="tocitem" href="../guide/sets/">Infinite Sets</a></li><li><a class="tocitem" href="../guide/parameter/">Infinite Parameters</a></li><li><a class="tocitem" href="../guide/finite_parameter/">Finite Parameters</a></li><li><a class="tocitem" href="../guide/variable/">Variables</a></li><li><a class="tocitem" href="../guide/derivative/">Derivatives</a></li><li><a class="tocitem" href="../guide/expression/">Expressions</a></li><li><a class="tocitem" href="../guide/measure/">Measures</a></li><li><a class="tocitem" href="../guide/objective/">Objectives</a></li><li><a class="tocitem" href="../guide/constraint/">Constraints</a></li><li><a class="tocitem" href="../guide/transcribe/">Model Transcription</a></li><li><a class="tocitem" href="../guide/optimize/">Optimization</a></li><li><a class="tocitem" href="../guide/result/">Results</a></li></ul></li><li><a class="tocitem" href="../examples/">Examples</a></li><li><a class="tocitem" href="../extensions/">Extensions</a></li><li><a class="tocitem" href="../develop/">Development</a></li><li><a class="tocitem" href="../library/">Library</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Quick Start Guide</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Quick Start Guide</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/docs/src/quick_start.md#L" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Quick-Start-Guide"><a class="docs-heading-anchor" href="#Quick-Start-Guide">Quick Start Guide</a><a id="Quick-Start-Guide-1"></a><a class="docs-heading-anchor-permalink" href="#Quick-Start-Guide" title="Permalink"></a></h1><p>Below we exemplify and briefly explain the very basics behind defining and solving  an infinite-dimensional optimization problem in <code>InfiniteOpt</code>. Please refer to the  Guide on our subsequent pages for more complete information. The Basic Usage sections  on the each guide page are good places to start from. Also, the syntax of <code>InfiniteOpt</code>  is inspired by <code>JuMP</code> thus we recommend new users that haven&#39;t used <code>JuMP</code>, first  consult their quick start guide <a href="https://jump.dev/JuMP.jl/stable/quickstart/">here</a>.</p><h2 id="Preliminaries"><a class="docs-heading-anchor" href="#Preliminaries">Preliminaries</a><a id="Preliminaries-1"></a><a class="docs-heading-anchor-permalink" href="#Preliminaries" title="Permalink"></a></h2><h3 id="Software-Setup"><a class="docs-heading-anchor" href="#Software-Setup">Software Setup</a><a id="Software-Setup-1"></a><a class="docs-heading-anchor-permalink" href="#Software-Setup" title="Permalink"></a></h3><p>First, we need to make sure everything is installed. This will include:</p><ul><li>installing Julia </li><li>installing the <code>InfiniteOpt.jl</code>, <code>JuMP.jl</code>, and <code>Distributions.jl</code> packages</li><li>installing wanted optimizers e.g., <code>Ipopt.jl</code> and <code>Clp.jl</code></li></ul><p>See <a href="../#Installation">Installation</a> for more information.</p><h3 id="Problem-Formulation"><a class="docs-heading-anchor" href="#Problem-Formulation">Problem Formulation</a><a id="Problem-Formulation-1"></a><a class="docs-heading-anchor-permalink" href="#Problem-Formulation" title="Permalink"></a></h3><p>Now we need to formulate the problem we want to solve mathematically. For example,  let&#39;s define a simple optimal control model:</p><p class="math-container">\[\begin{aligned}
+	&amp;&amp;\underset{x_i(t, \xi), v_i(t, \xi), y_w(\xi), u_i(t)}{\text{min}} &amp;&amp;&amp; \int_{t \in \mathcal{D}_t} \sum_{i \in I} u_i^2(t) dt \\
+	&amp;&amp;\text{s.t.} &amp;&amp;&amp; x_i(0, \xi) = x0_i, &amp;&amp; \forall i \in I, \xi \in \mathcal{D}_\xi\\
+    &amp;&amp;&amp;&amp;&amp; v_i(0, \xi) = v0_i, &amp;&amp; \forall i \in I, \xi \in \mathcal{D}_\xi \\
+	&amp;&amp;&amp;&amp;&amp; \frac{\partial x_i(t, \xi)}{\partial t} = v_i(t, \xi), &amp;&amp; \forall i \in I, t \in \mathcal{D}_t\, \xi \in \mathcal{D}_\xi\\
+    &amp;&amp;&amp;&amp;&amp; \xi\frac{\partial v_i(t, \xi)}{\partial t} = u_i(t), &amp;&amp; \forall i \in I, t \in \mathcal{D}_t, \xi \in \mathcal{D}_\xi\\
+    &amp;&amp;&amp;&amp;&amp; y_{w}(\xi) = \sum_{i \in I}(x_i(t_w, \xi) - p_{iw})^2, &amp;&amp; \forall w \in W, \xi \in \mathcal{D}_\xi \\
+    &amp;&amp;&amp;&amp;&amp; y_{w}(\xi) \geq 0, &amp;&amp; \forall w \in W, \xi \in \mathcal{D}_\xi \\
+    &amp;&amp;&amp;&amp;&amp; \mathbb{E}_{\xi}\left[\sum_{w \in W} y_w(\xi) \right] \leq \epsilon \\
+    &amp;&amp;&amp;&amp;&amp; \xi \sim \mathcal{N}(\mu, \sigma^2) \\
+    &amp;&amp;&amp;&amp;&amp; t \in \mathcal{D}_t
+\end{aligned}\]</p><p>Notice this model is both dynamic with time <span>$t$</span> and random with respect to <span>$\xi$</span>.</p><h3 id="Parameter-Specification"><a class="docs-heading-anchor" href="#Parameter-Specification">Parameter Specification</a><a id="Parameter-Specification-1"></a><a class="docs-heading-anchor-permalink" href="#Parameter-Specification" title="Permalink"></a></h3><p>Before moving on we&#39;ll need to define the necessary constants and problem  parameters. Thus, continuing with our example we define the following in our  Julia session (these could also be put into a script as is shown at the bottom  of this page):</p><pre><code class="language-julia-repl">julia&gt; μ = 1; σ = 0.2; # set the distribution parameters 
+
+julia&gt; x0 = [0, 0]; v0 = [0, 0]; # set the initial conditions
+
+julia&gt; p = [1 4 6 1; 1 3 0 1]; tw = [0, 25, 50, 60]; # set waypoint specifications
+
+julia&gt; I = 1:2; W = 1:4; # set the finite domains</code></pre><h2 id="Model-Definition"><a class="docs-heading-anchor" href="#Model-Definition">Model Definition</a><a id="Model-Definition-1"></a><a class="docs-heading-anchor-permalink" href="#Model-Definition" title="Permalink"></a></h2><h3 id="Model-Initialization"><a class="docs-heading-anchor" href="#Model-Initialization">Model Initialization</a><a id="Model-Initialization-1"></a><a class="docs-heading-anchor-permalink" href="#Model-Initialization" title="Permalink"></a></h3><p>The first thing we need to do is initialize our <code>InfiniteModel</code> and assign an  appropriate optimizer that will be used to solve its transcripted variant. For our  little example let&#39;s choose to use Ipopt:</p><pre><code class="language-julia-repl">julia&gt; using InfiniteOpt, JuMP, Distributions, Ipopt;
+
+julia&gt; model = InfiniteModel(Ipopt.Optimizer)
+An InfiniteOpt Model
+Feasibility problem with:
+Finite Parameters: 0
+Infinite Parameters: 0
+Variables: 0
+Derivatives: 0
+Measures: 0
+Optimizer model backend information:
+Model mode: AUTOMATIC
+CachingOptimizer state: EMPTY_OPTIMIZER
+Solver name: Ipopt</code></pre><p>Learn more about <code>InfiniteModel</code>s and optimizers on our  <a href="../guide/model/#infinite_model_docs">Infinite Models</a> page.</p><p>Before moving on, let&#39;s go ahead make a finite parameter via <a href="../guide/finite_parameter/#InfiniteOpt.@finite_parameter"><code>@finite_parameter</code></a>  for <span>$\epsilon$</span> since this likely a constant we&#39;ll want to update repeatedly  (e.g., to determine a tradeoff curve by varying it): </p><pre><code class="language-julia-repl">julia&gt; @finite_parameter(model, ϵ, 10)
+ϵ</code></pre><p>Learn more about finite parameters on our <a href="../guide/finite_parameter/#finite_param_docs">Finite Parameters</a>  page.</p><h3 id="Infinite-Parameters"><a class="docs-heading-anchor" href="#Infinite-Parameters">Infinite Parameters</a><a id="Infinite-Parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Infinite-Parameters" title="Permalink"></a></h3><p>The next thing we need to do is identify the infinite domains our problem contains  and define an infinite parameter(s) for each one via [<code>@infinite_parameter</code>]. For  this problem we have the time domain <span>$t \in \mathcal{D}_t$</span> and the random domain  <span>$\xi \in \mathcal{D}_\xi$</span> where <span>$\xi \sim \mathcal{N}(\mu, \sigma^2)$</span>:</p><pre><code class="language-julia-repl">julia&gt; @infinite_parameter(model, t in [0, 60], num_supports = 61, 
+                           derivative_method = OrthogonalCollocation(2))
+t
+
+julia&gt; @infinite_parameter(model, ξ in Normal(μ, σ^2), num_supports = 10)
+ξ</code></pre><p>Notice we specify the domain/distribution the parameter depends on via <code>in</code>. Here we also specify the number of finite supports we desire for each parameter  that will ultimately be used to reformulate and solve the problem (i.e., discretize).  We also specify the derivative evaluation method associated with <code>t</code> that will be  used evaluate the derivatives numerically. See more information about parameters  on our <a href="../guide/parameter/#inf_par_page">Infinite Parameters</a> page. Also learn more about  derivative methods on our <a href="../guide/derivative/#deriv_page">Derivative Operators</a> page.</p><h3 id="Variables"><a class="docs-heading-anchor" href="#Variables">Variables</a><a id="Variables-1"></a><a class="docs-heading-anchor-permalink" href="#Variables" title="Permalink"></a></h3><p>Now that we have an <code>InfiniteModel</code> and infinite parameters let&#39;s define our  decision variables. First, infinite variables (ones that depend on infinite  parameters) are defined via <a href="../guide/variable/#InfiniteOpt.@infinite_variable"><code>@infinite_variable</code></a> which uses a syntax  similar to <code>JuMP.@variable</code> except that we also indicate the infinite parameter  dependencies:</p><pre><code class="language-julia-repl">julia&gt; @infinite_variable(model, x[I](t, ξ), start = 0)
+1-dimensional DenseAxisArray{GeneralVariableRef,1,...} with index sets:
+    Dimension 1, 1:2
+And data, a 2-element Array{GeneralVariableRef,1}:
+ x[1](t, ξ)
+ x[2](t, ξ)
+
+julia&gt; @infinite_variable(model, v[I](t, ξ), start = 0)
+1-dimensional DenseAxisArray{GeneralVariableRef,1,...} with index sets:
+    Dimension 1, 1:2
+And data, a 2-element Array{GeneralVariableRef,1}:
+ v[1](t, ξ)
+ v[2](t, ξ)
+
+julia&gt; @infinite_variable(model, u[I](t), start = 0)
+1-dimensional DenseAxisArray{GeneralVariableRef,1,...} with index sets:
+    Dimension 1, 1:2
+And data, a 2-element Array{GeneralVariableRef,1}:
+ u[1](t)
+ u[2](t)
+
+julia&gt; @infinite_variable(model, y[W](ξ) &gt;= 0, start = 0)
+1-dimensional DenseAxisArray{GeneralVariableRef,1,...} with index sets:
+    Dimension 1, 1:4
+And data, a 4-element Array{GeneralVariableRef,1}:
+ y[1](ξ)
+ y[2](ξ)
+ y[3](ξ)
+ y[4](ξ)</code></pre><p>Notice that we specifying the initial guess for all of them via <code>start</code>. We also  can symbolically define variable conditions like the lower bound on <code>y</code>.</p><p>That does it for this example, but other problems might also employ the following:</p><ul><li><a href="../guide/variable/#InfiniteOpt.@hold_variable"><code>@hold_variable</code></a> to define variables that depend on finite domains </li><li><a href="../guide/variable/#InfiniteOpt.@point_variable"><code>@point_variable</code></a> to define infinite variables at a certain point</li></ul><h3 id="Objective-and-Constraints"><a class="docs-heading-anchor" href="#Objective-and-Constraints">Objective &amp; Constraints</a><a id="Objective-and-Constraints-1"></a><a class="docs-heading-anchor-permalink" href="#Objective-and-Constraints" title="Permalink"></a></h3><p>Now that the variables and parameters are ready to go, let&#39;s define our problem.  First, we can define the objective using <a href="../JuMP/#JuMP.@objective"><code>@objective</code></a>:</p><pre><code class="language-julia-repl">julia&gt; @objective(model, Min, integral(sum(u[i]^2 for i in I), t))
+∫{t ∈ [0, 60]}[u[1](t)² + u[2](t)²]</code></pre><p>Notice that we also employ <a href="../guide/measure/#InfiniteOpt.MeasureToolbox.integral-Tuple{AbstractJuMPScalar,GeneralVariableRef,Real,Real}"><code>integral</code></a> to define the integral. Note that  objectives must evaluate over all included infinite domains. </p><p>Now let&#39;s define the initial conditions using <a href="../guide/constraint/#InfiniteOpt.@BDconstraint"><code>@BDconstraint</code></a> which we use  to define constraints over portions and/or points of the infinite domain:</p><pre><code class="language-julia-repl">julia&gt; @BDconstraint(model, initial1[i in I](t == 0), x[i] == x0[i])
+1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
+    Dimension 1, 1:2
+And data, a 2-element Array{InfOptConstraintRef,1}:
+ initial1[1] : x[1](t, ξ) = 0.0, ∀ t = 0, ξ ~ Normal
+ initial1[2] : x[2](t, ξ) = 0.0, ∀ t = 0, ξ ~ Normal
+
+julia&gt; @BDconstraint(model, initial2[i in I](t == 0), v[i] == v0[i])
+1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
+    Dimension 1, 1:2
+And data, a 2-element Array{InfOptConstraintRef,1}:
+ initial2[1] : v[1](t, ξ) = 0.0, ∀ t = 0, ξ ~ Normal
+ initial2[2] : v[2](t, ξ) = 0.0, ∀ t = 0, ξ ~ Normal</code></pre><p>Note it is important that we include appropriate boundary conditions when using  derivatives in our model. For more information please see  <a href="../guide/derivative/#deriv_page">Derivative Operators</a>.</p><p>Next, we can add our model constraints that have derivatives using  <a href="../JuMP/#JuMP.@constraint"><code>@constraint</code></a> and <a href="../guide/derivative/#InfiniteOpt.@deriv"><code>@deriv</code></a>:</p><pre><code class="language-julia-repl">julia&gt; @constraint(model, c1[i in I], @deriv(x[i], t) == v[i])
+1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
+    Dimension 1, 1:2
+And data, a 2-element Array{InfOptConstraintRef,1}:
+ c1[1] : ∂/∂t[x[1](t, ξ)] - v[1](t, ξ) = 0.0, ∀ t ∈ [0, 60], ξ ~ Normal
+ c1[2] : ∂/∂t[x[2](t, ξ)] - v[2](t, ξ) = 0.0, ∀ t ∈ [0, 60], ξ ~ Normal
+
+julia&gt; @constraint(model, c2[i in I], ξ * @deriv(v[i], t) == u[i])
+1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
+    Dimension 1, 1:2
+And data, a 2-element Array{InfOptConstraintRef,1}:
+ c2[1] : ξ*∂/∂t[v[1](t, ξ)] - u[1](t) = 0.0, ∀ t ∈ [0, 60], ξ ~ Normal
+ c2[2] : ξ*∂/∂t[v[2](t, ξ)] - u[2](t) = 0.0, ∀ t ∈ [0, 60], ξ ~ Normal</code></pre><p>Finally, we can define our last 2 constraints in the example using both  <a href="../guide/constraint/#InfiniteOpt.@BDconstraint"><code>@BDconstraint</code></a> and <a href="../JuMP/#JuMP.@constraint"><code>@constraint</code></a>:</p><pre><code class="language-julia-repl">julia&gt; @BDconstraint(model, c3[w in W](t == tw[w]), y[w] == sum((x[i] - p[i, w])^2 for i in I))
+1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
+    Dimension 1, 1:4
+And data, a 4-element Array{InfOptConstraintRef,1}:
+ c3[1] : -x[1](t, ξ)² - x[2](t, ξ)² + y[1](ξ) + 2 x[1](t, ξ) + 2 x[2](t, ξ) = 2.0, ∀ t = 0, ξ ~ Normal
+ c3[2] : -x[1](t, ξ)² - x[2](t, ξ)² + y[2](ξ) + 8 x[1](t, ξ) + 6 x[2](t, ξ) = 25.0, ∀ t = 25, ξ ~ Normal
+ c3[3] : -x[1](t, ξ)² - x[2](t, ξ)² + y[3](ξ) + 12 x[1](t, ξ) = 36.0, ∀ t = 50, ξ ~ Normal
+ c3[4] : -x[1](t, ξ)² - x[2](t, ξ)² + y[4](ξ) + 2 x[1](t, ξ) + 2 x[2](t, ξ) = 2.0, ∀ t = 60, ξ ~ Normal
+
+julia&gt; @constraint(model, c4, expect(sum(y[w] for w in W), ξ) &lt;= ϵ)
+c4 : 𝔼{ξ}[y[1](ξ) + y[2](ξ) + y[3](ξ) + y[4](ξ)] - ϵ ≤ 0.0</code></pre><p>Notice we are able to invoke an expectation simply by calling <a href="../guide/measure/#InfiniteOpt.MeasureToolbox.expect"><code>expect</code></a>.</p><p>That&#39;s it, now we have our problem defined in <code>InfiniteOpt</code>!</p><h2 id="Solution-and-Queries"><a class="docs-heading-anchor" href="#Solution-and-Queries">Solution &amp; Queries</a><a id="Solution-and-Queries-1"></a><a class="docs-heading-anchor-permalink" href="#Solution-and-Queries" title="Permalink"></a></h2><h3 id="Optimize"><a class="docs-heading-anchor" href="#Optimize">Optimize</a><a id="Optimize-1"></a><a class="docs-heading-anchor-permalink" href="#Optimize" title="Permalink"></a></h3><p>Now that our model is defined, let&#39;s optimize it via <a href="../JuMP/#JuMP.optimize!-Tuple{Model,Any}"><code>optimize!</code></a>:</p><pre><code class="language-julia-repl">julia&gt; optimize!(model)
+</code></pre><p>We can check the solution status via  <a href="../guide/result/#JuMP.termination_status-Tuple{InfiniteModel}"><code>termination_status</code></a>:</p><pre><code class="language-julia-repl">julia&gt; termination_status(model)
+LOCALLY_SOLVED::TerminationStatusCode = 4</code></pre><p>Thus, our model was solved successfully! For more information please see our  <a href="../guide/optimize/#opt_page">Optimization</a> and <a href="../guide/result/#Results">Results</a> pages.</p><h3 id="Query-the-Solution"><a class="docs-heading-anchor" href="#Query-the-Solution">Query the Solution</a><a id="Query-the-Solution-1"></a><a class="docs-heading-anchor-permalink" href="#Query-the-Solution" title="Permalink"></a></h3><p>Finally, we can query a wide variety of information about our solution. Perhaps  most commonly we&#39;ll want to know the objective value and the optimal primal values  of decision variables. This is accomplished via  <a href="../guide/result/#JuMP.objective_value-Tuple{InfiniteModel}"><code>objective_value</code></a> and  <a href="../guide/result/#JuMP.value-Tuple{GeneralVariableRef}"><code>value</code></a>:</p><pre><code class="language-julia-repl">julia&gt; opt_obj = objective_value(model);
+
+julia&gt; u_opt = value.(u);</code></pre><p>Note that u_opt will be multi-dimensional combination with the support values used  to transcribe <code>u(t)</code> along the domain of <code>t</code>. We can query those corresponding  support values via <code>supports</code>:</p><pre><code class="language-julia-repl">julia&gt; u_ts = supports.(u)
+1-dimensional DenseAxisArray{Array{Tuple,1},1,...} with index sets:
+    Dimension 1, 1:2
+And data, a 2-element Array{Array{Tuple,1},1}:
+ [(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,)  …  (51.0,), (52.0,), (53.0,), (54.0,), (55.0,), (56.0,), (57.0,), (58.0,), (59.0,), (60.0,)]
+ [(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,)  …  (51.0,), (52.0,), (53.0,), (54.0,), (55.0,), (56.0,), (57.0,), (58.0,), (59.0,), (60.0,)]</code></pre><p>Please see the <a href="../guide/result/#Results">Results</a> page for more information. </p><h2 id="Summary-Script"><a class="docs-heading-anchor" href="#Summary-Script">Summary Script</a><a id="Summary-Script-1"></a><a class="docs-heading-anchor-permalink" href="#Summary-Script" title="Permalink"></a></h2><p>The example used in the sections above is summarized in the script below:</p><pre><code class="language-julia">using InfiniteOpt, JuMP, Distributions, Ipopt
+
+# DEFINE THE PROBLEM CONSTANTS
+μ = 1; σ = 0.2
+x0 = [0, 0]; v0 = [0, 0]
+p = [1 4 6 1; 1 3 0 1]; tw = [0, 25, 50, 60]
+I = 1:2; W = 1:4
+
+# INITIALIZE THE MODEL
+model = InfiniteModel(Ipopt.Optimizer)
+
+# INITIALIZE THE PARAMETERS
+@finite_parameter(model, ϵ, 10)
+@infinite_parameter(model, t in [0, 60], num_supports = 61, 
+                    derivative_method = OrthogonalCollocation(2))
+@infinite_parameter(model, ξ in Normal(μ, σ^2), num_supports = 10)
+
+# INITIALIZE THE PARAMETERS
+@infinite_variable(model, x[I](t, ξ), start = 0)
+@infinite_variable(model, v[I](t, ξ), start = 0)
+@infinite_variable(model, u[I](t), start = 0)
+@infinite_variable(model, y[W](ξ) &gt;= 0, start = 0)
+
+# SET THE OBJECTIVE
+@objective(model, Min, integral(sum(u[i]^2 for i in I), t))
+
+# SET THE INITIAL CONDITIONS
+@BDconstraint(model, initial1[i in I](t == 0), x[i] == x0[i])
+@BDconstraint(model, initial2[i in I](t == 0), v[i] == v0[i])
+
+# SET THE PROBLEM CONSTRAINTS
+@constraint(model, c1[i in I], @deriv(x[i], t) == v[i])
+@constraint(model, c2[i in I], ξ * @deriv(v[i], t) == u[i])
+@BDconstraint(model, c3[w in W](t == tw[w]), y[w] == sum((x[i] - p[i, w])^2 for i in I))
+@constraint(model, c4, expect(sum(y[w] for w in W), ξ) &lt;= ϵ)
+
+# SOLVE THE MODEL
+optimize!(model)
+
+# GET THE RESULTS
+termination_status(model)
+opt_obj = objective_value(model)
+u_opt = value.(u)
+u_ts = supports.(u)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../guide/install/">Installation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 25 November 2020 22:43">Wednesday 25 November 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

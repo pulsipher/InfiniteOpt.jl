@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Examples · InfiniteOpt.jl</title><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-178297470-1', 'auto');
+ga('send', 'pageview', {'page': location.pathname + location.search + location.hash});
+</script><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img class="docs-light-only" src="../assets/logo.png" alt="InfiniteOpt.jl logo"/><img class="docs-dark-only" src="../assets/logo-dark.png" alt="InfiniteOpt.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">InfiniteOpt.jl</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../quick_start/">Quick Start Guide</a></li><li><span class="tocitem">User Guide</span><ul><li><a class="tocitem" href="../guide/install/">Installation</a></li><li><a class="tocitem" href="../guide/model/">Infinite Models</a></li><li><a class="tocitem" href="../guide/sets/">Infinite Sets</a></li><li><a class="tocitem" href="../guide/parameter/">Infinite Parameters</a></li><li><a class="tocitem" href="../guide/finite_parameter/">Finite Parameters</a></li><li><a class="tocitem" href="../guide/variable/">Variables</a></li><li><a class="tocitem" href="../guide/derivative/">Derivatives</a></li><li><a class="tocitem" href="../guide/expression/">Expressions</a></li><li><a class="tocitem" href="../guide/measure/">Measures</a></li><li><a class="tocitem" href="../guide/objective/">Objectives</a></li><li><a class="tocitem" href="../guide/constraint/">Constraints</a></li><li><a class="tocitem" href="../guide/transcribe/">Model Transcription</a></li><li><a class="tocitem" href="../guide/optimize/">Optimization</a></li><li><a class="tocitem" href="../guide/result/">Results</a></li></ul></li><li class="is-active"><a class="tocitem" href>Examples</a><ul class="internal"><li><a class="tocitem" href="#Two-Stage-Stochastic-Program"><span>Two-Stage Stochastic Program</span></a></li><li><a class="tocitem" href="#Optimal-Control"><span>Optimal Control</span></a></li></ul></li><li><a class="tocitem" href="../extensions/">Extensions</a></li><li><a class="tocitem" href="../develop/">Development</a></li><li><a class="tocitem" href="../library/">Library</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Examples</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/docs/src/examples.md#L" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Examples"><a class="docs-heading-anchor" href="#Examples">Examples</a><a id="Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Examples" title="Permalink"></a></h1><p>Here we exemplify the use of <code>InfiniteOpt</code> via a few case studies:</p><h2 id="Two-Stage-Stochastic-Program"><a class="docs-heading-anchor" href="#Two-Stage-Stochastic-Program">Two-Stage Stochastic Program</a><a id="Two-Stage-Stochastic-Program-1"></a><a class="docs-heading-anchor-permalink" href="#Two-Stage-Stochastic-Program" title="Permalink"></a></h2><p>First let&#39;s consider a standard two-stage stochastic program. Such problems consider 1st stage variables <span>$x \in X \subseteq \mathbb{R}^{n_x}$</span> which denote upfront (hear-and-now) decisions made before any realization of the random parameters <span>$\xi \in \mathbb{R}^{n_\xi}$</span> is observed, and 2nd stage variables <span>$y(\xi) \in \mathbb{R}^{n_y}$</span> which denote recourse (wait-and-see) decisions that are made in response to realizations of <span>$\xi$</span>. Moreover, the objective seeks to optimize 1st stage costs <span>$f_1(x)$</span> and second stage costs <span>$f_2(x, y(\xi))$</span> which are evaluated over the uncertain domain via a risk measure <span>$R_\xi[\cdot]$</span> (e.g., the expectation <span>$\mathbb{E}_\xi[\cdot]$</span>). Putting this together, we obtain the two-stage stochastic program:</p><p class="math-container">\[\begin{aligned}
+	&amp;&amp;\min_{x, y(\xi)} &amp;&amp;&amp; f_1(x) + R_\xi[f_2(x, y(\xi))] \\
+	&amp;&amp;\text{s.t.} &amp;&amp;&amp;  g_i(x, y(\xi)) = 0, &amp;&amp; i \in I\\
+	&amp;&amp;&amp;&amp;&amp; h_j(x, y(\xi)) \leq 0, &amp;&amp; j \in J\\
+    &amp;&amp;&amp;&amp;&amp;  x \in X\\
+\end{aligned}\]</p><p>where <span>$g_i(x, y(\xi)), \ i \in I,$</span> denote 2nd stage equality constraints, <span>$h_j(x, y(\xi)), \ j \in J,$</span> are 2nd stage inequality constraints, and <span>$X$</span> denotes the set of feasible 1st stage decisions.</p><p>For an example, we consider the classic farmer problem. Here the farmer must allocate farmland <span>$x_c$</span> for each crop <span>$c \in C$</span> with random yields per acre <span>$\xi_c$</span> such that he minimizes expenses (i.e., maximizes profit) while fulfilling contractual demand <span>$d_c$</span>. If needed he can purchase crops from other farmers to satisfy his contracts. He can also sell extra crop yield that exceeds his contractual obligations. Thus, here we have 1st stage variables <span>$x_c$</span> and 2nd stage variables of crops sold <span>$w_c(\xi)$</span> and crops purchased <span>$y_c(\xi)$</span>. Putting this together using the expectation <span>$\mathbb{E}_\xi[\cdot]$</span> as our risk measure we obtain:</p><p class="math-container">\[\begin{aligned}
+	&amp;&amp;\underset{x, y(\xi), w(\xi)}{\text{min}} &amp;&amp;&amp; \sum_{c \in C} \alpha_c x_c + \mathbb{E}_{\xi}\left[\sum_{c \in C}\beta_c y_c(\xi) - \lambda_c w_c(\xi)\right] \\
+	&amp;&amp;\text{s.t.} &amp;&amp;&amp;  \sum_{c \in C} x_c \leq \bar{x}\\
+	&amp;&amp;&amp;&amp;&amp; \xi_c x_c + y_c(\xi) - w_c(\xi) \geq d_c, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; 0 \leq x_c \leq \bar{x}, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; 0 \leq y_c(\xi) \leq \bar{y}_c, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; 0 \leq w_c(\xi) \leq \bar{w}_c, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; \xi_c \in \Xi_c, &amp;&amp; c \in C
+\end{aligned}\]</p><p>where <span>$\alpha_c$</span> are production costs, <span>$\beta_c$</span> are the purchase prices, <span>$\lambda_c$</span> are the selling prices, <span>$\bar{x}$</span> is the total acreage, <span>$\bar{y}_c$</span> are purchases limits, <span>$\bar{w}_c$</span> are selling limits, and <span>$\Xi_c$</span> are the underlying distributions.</p><p>Now let&#39;s implement this first by defining the problem parameters:</p><pre><code class="language-julia">using Distributions
+
+# Model parameters
+num_scenarios = 10
+C = 1:3
+
+# Data
+α = [150, 230, 260] # land cost
+β = [238, 210, 0]   # purchasing cost
+λ = [170, 150, 36]  # selling price
+d = [200, 240, 0]   # contract demand
+xbar = 500          # total land
+wbar3 = 6000        # no upper bound on the other crops
+ybar3 = 0           # no upper bound on the other crops
+
+# Define the distributions
+Ξ = [Uniform(0, 5), Uniform(0, 5), Uniform(10, 30)]</code></pre><p>Great now we can formulate and solve the problem using <code>InfiniteOpt</code>:</p><pre><code class="language-julia">using InfiniteOpt, JuMP, Ipopt, Random
+
+# Seed for repeatability
+Random.seed!(0)
+
+# Initialize the model
+model = InfiniteModel(Ipopt.Optimizer) # seed to test output
+set_optimizer_attribute(model, &quot;print_level&quot;, 0)
+
+# Define the random parameters
+@infinite_parameter(model, ξ[c in C] in Ξ[c], num_supports = num_scenarios)
+
+# Define the variables and bounds
+@hold_variable(model, 0 &lt;= x[C] &lt;= xbar)
+@infinite_variable(model, 0 &lt;= y[C](ξ))
+@infinite_variable(model, 0 &lt;= w[C](ξ))
+
+# Define the objective
+@objective(model, Min, sum(α[c] * x[c] for c in C) +
+           𝔼(sum(β[c] * y[c] - λ[c] * w[c] for c in C), ξ))
+
+# Define the constraints
+@constraint(model, capacity, sum(x[c] for c in C) &lt;= xbar)
+@constraint(model, balance[c in C], ξ[c] * x[c] + y[c] - w[c] &gt;= d[c])
+@constraint(model, w[3] &lt;= wbar3)
+@constraint(model, y[3] &lt;= ybar3)
+
+# Optimize and get the results
+optimize!(model)
+x_opt = value.(x)
+profit = -objective_value(model)
+
+# Print the results
+println(&quot;Land Allocations: &quot;, [round(x_opt[k], digits = 2) for k in keys(x_opt)])
+println(&quot;Expected Profit: \$&quot;, round(profit, digits = 2))</code></pre><pre><code class="language-none">Land Allocations: [48.56, 214.77, 236.67]
+Expected Profit: $57099.53</code></pre><p>We did it! An interesting modification would be to use a <span>$CVaR$</span> risk measure instead of an expectation. This also can be readily achieved via <code>InfiniteOpt</code>. The <span>$CVaR$</span> measure is defined:</p><p class="math-container">\[CVaR_\epsilon(X) = \underset{t \in \mathbb{R}}{\text{inf}}\left\{t + \frac{1}{1-\epsilon} \mathbb{E}[\text{max}(0, X - t)] \right\}\]</p><p>where <span>$\epsilon$</span> is the confidence level. Inserting this into the formulation, we now obtain:</p><p class="math-container">\[\begin{aligned}
+	&amp;&amp;\underset{x, y(\xi), w(\xi), t, q(\xi)}{\text{min}} &amp;&amp;&amp; \sum_{c \in C} \alpha_c x_c + t + \frac{1}{1-\epsilon} \mathbb{E}_{\xi}[q(\xi)] \\
+	&amp;&amp;\text{s.t.} &amp;&amp;&amp; \sum_{c \in C} x_c \leq \bar{x}\\
+	&amp;&amp;&amp;&amp;&amp; \xi_c x_c + y_c(\xi) - w_c(\xi) \geq d_c, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; 0 \leq x_c \leq \bar{x}, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; 0 \leq y_c(\xi) \leq \bar{y}_c, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; 0 \leq w_c(\xi) \leq \bar{w}_c, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; \xi_c \in \Xi_c, &amp;&amp; c \in C \\
+    &amp;&amp;&amp;&amp;&amp; q(\xi) \geq \sum_{c \in C}\beta_c y_c(\xi) - \lambda_c w_c(\xi) - t \\
+    &amp;&amp;&amp;&amp;&amp; q(\xi) \geq 0
+\end{aligned}\]</p><p>where <span>$q(\xi)$</span> is introduced to handle the max operator. Let&#39;s update and resolve our <code>InfiniteOpt</code> model using <span>$\epsilon = 0.95$</span>:</p><pre><code class="language-julia"># Define the additional variables
+@hold_variable(model, t)
+@infinite_variable(model, q(ξ) &gt;= 0)
+
+# Redefine the objective
+@objective(model, Min, sum(α[c] * x[c] for c in C) + t + 1 \ (1 - 0.95) * 𝔼(q, ξ))
+
+# Add the max constraint
+@constraint(model, max, q &gt;= sum(β[c] * y[c] - λ[c] * w[c] for c in C) - t)
+
+# Optimize and get the results
+optimize!(model)
+x_opt = value.(x)
+y_opt = value.(y)
+w_opt = value.(w)
+profit = -sum(α[c] * x_opt[c] for c in C) - 1 / num_scenarios *
+         sum(β[c] * y_opt[c][k] - λ[c] * w_opt[c][k] for c in C, k in 1:num_scenarios)
+
+# Print the results
+println(&quot;Land Allocations: &quot;, [round(x_opt[k], digits = 2) for k in keys(x_opt)])
+println(&quot;Expected Profit: \$&quot;, round(profit, digits = 2))</code></pre><pre><code class="language-none">Land Allocations: [58.5, 199.25, 242.26]
+Expected Profit: $32918.89</code></pre><h2 id="Optimal-Control"><a class="docs-heading-anchor" href="#Optimal-Control">Optimal Control</a><a id="Optimal-Control-1"></a><a class="docs-heading-anchor-permalink" href="#Optimal-Control" title="Permalink"></a></h2><p>In this case study, we seek to determine an optimal control policy for the trajectory of a hovercraft that travels to a set of dynamic waypoints while trying to minimize the thrust input. The corresponding dynamic optimization problem is expressed:</p><p class="math-container">\[\begin{aligned}
+	&amp;&amp;\underset{x(t), v(t), u(t)}{\text{min}} &amp;&amp;&amp; \int_{t \in T} |u(t)|_2^2 dt  \\
+	&amp;&amp;\text{s.t.} &amp;&amp;&amp; v(0) = v0\\
+	&amp;&amp;&amp;&amp;&amp; \frac{dx}{dt} = v(t), &amp;&amp; t \in T\\
+    &amp;&amp;&amp;&amp;&amp; \frac{dv}{dt} = u(t), &amp;&amp; t \in T\\
+    &amp;&amp;&amp;&amp;&amp; x(t_i) = xw_i, &amp;&amp; i \in I
+\end{aligned}\]</p><p>where <span>$x(t)$</span> is the Cartesian position, <span>$v(t)$</span> is the velocity, <span>$u(t)$</span> is the thrust input, <span>$xw_i, \ i \in I,$</span> are the waypoints, and <span>$T$</span> is the time horizon.</p><p>Let&#39;s implement this in <code>InfiniteOpt</code>:</p><pre><code class="language-julia">using InfiniteOpt, JuMP, Ipopt
+
+# Waypoints
+xw = [1 4 6 1; 1 3 0 1] # positions
+tw = [0, 25, 50, 60]    # times
+
+# Initialize the model
+m = InfiniteModel(optimizer_with_attributes(Ipopt.Optimizer, &quot;print_level&quot; =&gt; 0))
+
+# Set the parameters and variables
+@infinite_parameter(m, t in [0, 60], num_supports = 61)
+@infinite_variable(m, x[1:2](t), start = 1) # position
+@infinite_variable(m, v[1:2](t), start = 0) # velocity
+@infinite_variable(m, u[1:2](t), start = 0) # thruster input
+
+# Specify the objective
+@objective(m, Min, ∫(u[1]^2 + u[2]^2, t))
+
+# Set the initial conditions
+@BDconstraint(m, initial_velocity[i = 1:2](t == 0), v[i] == 0)
+
+# Define the point physics
+@constraint(m, [i = 1:2], ∂(x[i], t) == v[i])
+@constraint(m, [i = 1:2], ∂(v[i], t) == u[i])
+
+# Hit all the waypoints
+@BDconstraint(m, [i = 1:2, j = eachindex(tw)](t == tw[j]), x[i] == xw[i, j])
+
+# Optimize the model
+optimize!(m)</code></pre><p>This thus demonstrates how point variables can be used to enable functionality that is not built in <code>InfinitOpt</code>. Finally, let&#39;s extract the solution and plot it to see the finalized trajectory:</p><pre><code class="language-julia">using PyPlot
+
+# Get the results
+if has_values(m)
+    x_opt = value.(x)
+end
+
+# Plot the results
+figure()
+scatter(xw[1,:], xw[2,:], label = &quot;Waypoints&quot;)
+plot(x_opt[1], x_opt[2], label = &quot;Trajectory&quot;, color = &quot;C1&quot;)
+xlabel(L&quot;$x_1$&quot;)
+ylabel(L&quot;$x_2$&quot;)
+legend()</code></pre><p><img src="../assets/hovercraft.png" alt="answer"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../guide/result/">« Results</a><a class="docs-footer-nextpage" href="../extensions/">Extensions »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 25 November 2020 22:43">Wednesday 25 November 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
