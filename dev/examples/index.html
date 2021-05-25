@@ -48,9 +48,9 @@ set_optimizer_attribute(model, &quot;print_level&quot;, 0)
 @infinite_parameter(model, ξ[c in C] in Ξ[c], num_supports = num_scenarios)
 
 # Define the variables and bounds
-@finite_variable(model, 0 &lt;= x[C] &lt;= xbar)
-@infinite_variable(model, 0 &lt;= y[C](ξ))
-@infinite_variable(model, 0 &lt;= w[C](ξ))
+@variable(model, 0 &lt;= x[C] &lt;= xbar)
+@variable(model, 0 &lt;= y[C], Infinite(ξ))
+@variable(model, 0 &lt;= w[C], Infinite(ξ))
 
 # Define the objective
 @objective(model, Min, sum(α[c] * x[c] for c in C) +
@@ -81,11 +81,11 @@ Expected Profit: $57099.53</code></pre><p>We did it! An interesting modification
     &amp;&amp;&amp;&amp;&amp; q(\xi) \geq \sum_{c \in C}\beta_c y_c(\xi) - \lambda_c w_c(\xi) - t \\
     &amp;&amp;&amp;&amp;&amp; q(\xi) \geq 0
 \end{aligned}\]</p><p>where <span>$q(\xi)$</span> is introduced to handle the max operator. Let&#39;s update and resolve our <code>InfiniteOpt</code> model using <span>$\epsilon = 0.95$</span>:</p><pre><code class="language-julia"># Define the additional variables
-@finite_variable(model, t)
-@infinite_variable(model, q(ξ) &gt;= 0)
+@variable(model, t)
+@variable(model, q &gt;= 0, Infinite(ξ))
 
 # Redefine the objective
-@objective(model, Min, sum(α[c] * x[c] for c in C) + t + 1 \ (1 - 0.95) * 𝔼(q, ξ))
+@objective(model, Min, sum(α[c] * x[c] for c in C) + t + 1 / (1 - 0.95) * 𝔼(q, ξ))
 
 # Add the max constraint
 @constraint(model, max, q &gt;= sum(β[c] * y[c] - λ[c] * w[c] for c in C) - t)
@@ -118,22 +118,22 @@ m = InfiniteModel(optimizer_with_attributes(Ipopt.Optimizer, &quot;print_level&q
 
 # Set the parameters and variables
 @infinite_parameter(m, t in [0, 60], num_supports = 61)
-@infinite_variable(m, x[1:2](t), start = 1) # position
-@infinite_variable(m, v[1:2](t), start = 0) # velocity
-@infinite_variable(m, u[1:2](t), start = 0) # thruster input
+@variable(m, x[1:2], Infinite(t), start = 1) # position
+@variable(m, v[1:2], Infinite(t), start = 0) # velocity
+@variable(m, u[1:2], Infinite(t), start = 0) # thruster input
 
 # Specify the objective
 @objective(m, Min, ∫(u[1]^2 + u[2]^2, t))
 
 # Set the initial conditions
-@BDconstraint(m, initial_velocity[i = 1:2](t == 0), v[i] == 0)
+@constraint(m, initial_velocity[i = 1:2], v[i] == 0, DomainRestrictions(t =&gt; 0))
 
 # Define the point physics
 @constraint(m, [i = 1:2], ∂(x[i], t) == v[i])
 @constraint(m, [i = 1:2], ∂(v[i], t) == u[i])
 
 # Hit all the waypoints
-@BDconstraint(m, [i = 1:2, j = eachindex(tw)](t == tw[j]), x[i] == xw[i, j])
+@constraint(m, [i = 1:2, j = eachindex(tw)], x[i] == xw[i, j], DomainRestrictions(t =&gt; tw[j]))
 
 # Optimize the model
 optimize!(m)</code></pre><p>This thus demonstrates how point variables can be used to enable functionality that is not built in <code>InfiniteOpt</code>. Finally, let&#39;s extract the solution and plot it to see the finalized trajectory:</p><pre><code class="language-julia">using PyPlot
@@ -149,4 +149,4 @@ scatter(xw[1,:], xw[2,:], label = &quot;Waypoints&quot;)
 plot(x_opt[1], x_opt[2], label = &quot;Trajectory&quot;, color = &quot;C1&quot;)
 xlabel(L&quot;$x_1$&quot;)
 ylabel(L&quot;$x_2$&quot;)
-legend()</code></pre><p><img src="../assets/hovercraft.png" alt="answer"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../guide/result/">« Results</a><a class="docs-footer-nextpage" href="../extensions/">Extensions »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 5 May 2021 17:30">Wednesday 5 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+legend()</code></pre><p><img src="../assets/hovercraft.png" alt="answer"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../guide/result/">« Results</a><a class="docs-footer-nextpage" href="../extensions/">Extensions »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 25 May 2021 22:47">Tuesday 25 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
