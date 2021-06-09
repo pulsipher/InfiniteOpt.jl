@@ -54,8 +54,6 @@
 
 # First let's import the necessary packages:
 using InfiniteOpt, Distributions, Ipopt
-import Random; Random.seed!(0) #src
-using Test #src
 
 # Next let's specify the problem data:
 num_scenarios = 10 # small amount for example
@@ -67,14 +65,14 @@ d = [200, 240, 0]   # contract demand
 xbar = 500          # total land
 wbar3 = 6000        # no upper bound on the other crops
 ybar3 = 0           # no upper bound on the other crops
-Ξ = [Uniform(0, 5), Uniform(0, 5), Uniform(10, 30)] # the distributions
+Ξ = [Uniform(0, 5), Uniform(0, 5), Uniform(10, 30)]; # the distributions
 
 # ## Problem Definition
 
 # Let's start by setting up the infinite model that uses Ipopt as the optimizer 
-# that will utltimately be used to solve the transribed variant:
+# that will ultimately be used to solve the transcribed variant:
 model = InfiniteModel(Ipopt.Optimizer)
-set_optimizer_attribute(model, "print_level", 0)
+set_optimizer_attribute(model, "print_level", 0);
 
 # Now let's define the infinite parameters using [`@infinite_parameter`](@ref):
 @infinite_parameter(model, ξ[c in C] ~ Ξ[c], num_supports = num_scenarios)
@@ -109,10 +107,6 @@ end)
 optimize!(model)
 x_opt = value.(x)
 profit = -objective_value(model)
-
-@test termination_status(model) == MOI.LOCALLY_SOLVED  #src
-@test x_opt isa JuMPC.DenseAxisArray{<:Real} #src
-@test profit isa Real #src
 
 println("Land Allocations: ", [round(x_opt[k], digits = 2) for k in keys(x_opt)])
 println("Expected Profit: \$", round(profit, digits = 2))
@@ -165,9 +159,14 @@ w_opt = value.(w)
 profit = -sum(α[c] * x_opt[c] for c in C) - 1 / num_scenarios *
             sum(β[c] * y_opt[c][k] - λ[c] * w_opt[c][k] for c in C, k in 1:num_scenarios)
 
-@test termination_status(model) == MOI.LOCALLY_SOLVED  #src
-@test x_opt isa JuMPC.DenseAxisArray{<:Real} #src
-@test profit isa Real #src
-
 println("Land Allocations: ", [round(x_opt[k], digits = 2) for k in keys(x_opt)])
 println("Expected Profit: \$", round(profit, digits = 2))
+
+# That's it!
+
+# ### Maintenance Tests
+# These are here to ensure this example stays up to date. 
+using Test
+@test termination_status(model) == MOI.LOCALLY_SOLVED
+@test x_opt isa JuMPC.DenseAxisArray{<:Real}
+@test profit isa Real

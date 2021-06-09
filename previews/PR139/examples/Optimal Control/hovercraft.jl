@@ -23,14 +23,13 @@
 
 # Let's implement this in `InfiniteOpt` and first import the packages we need:
 using InfiniteOpt, Ipopt
-using Test #src
 
 # Next we'll specify our waypoint data:
 xw = [1 4 6 1; 1 3 0 1] # positions
-tw = [0, 25, 50, 60]    # times
+tw = [0, 25, 50, 60];    # times
 
 # We initialize the infinite model and opt to use the Ipopt solver:
-m = InfiniteModel(optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0))
+m = InfiniteModel(optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0));
 
 # Let's specify our infinite parameter which is time ``t \in [0, 60]``:
 @infinite_parameter(m, t in [0, 60], num_supports = 61)
@@ -63,17 +62,20 @@ end)
 optimize!(m)
 
 # Extract the results:
-if has_values(m)
-    x_opt = value.(x)
-end
-
-@test termination_status(m) == MOI.LOCALLY_SOLVED #src
-@test has_values(m) #src
-@test x_opt isa Vector{<:Vector{<:Real}} #src
+x_opt = value.(x);
 
 # Plot the results:
 using Plots
-scatter(xw[1,:], xw[2,:], label = "Waypoints")
+scatter(xw[1,:], xw[2,:], label = "Waypoints", background_color = :transparent)
 plot!(x_opt[1], x_opt[2], label = "Trajectory")
 xlabel!("x_1")
 ylabel!("x_2")
+
+# That's it, now we have our optimal trajectory!
+
+# ### Maintenance Tests
+# These are here to ensure this example stays up to date. 
+using Test
+@test termination_status(m) == MOI.LOCALLY_SOLVED
+@test has_values(m)
+@test x_opt isa Vector{<:Vector{<:Real}}
