@@ -1,14 +1,14 @@
-# # Lifecycle consumption savings problem
+# # Consumption Savings Problem
 # In this case study, a household endowed with ``B_0`` dollars of wealth
 # must decide how much to consume and save 
-# to maximize its (quadratic) utility over its finite lifecycle. 
+# to maximize its utility over its finite lifecycle. 
 
 # ## Formulation
 
 # The corresponding dynamic optimization problem is expressed:
 # ```math
 # \begin{aligned}
-# 	&V(B_0,0) = &&\underset{c(t), B(t)}{\text{max}} &&& \int_{t = 0}^{t=T} e^{-\rho t} u(c(t)) dt \\
+# 	&V(B_0,0) = &&\underset{c(t), B(t)}{\text{max}} \int_{t = 0}^{t=T} e^{-\rho t} u(c(t)) dt \\
 # 	&\text{s.t.} \\
 # 	&&& \frac{dB}{dt} = r \times B(t) - c(t), && t \in [0,T] \\
 #   &&& B(0) = B_0 \\
@@ -42,7 +42,7 @@ BC(B, c; r=r) = r*B - c      # budget constraint
 
 # We set the hyperparameters:
 opt = Ipopt.Optimizer   # desired solver
-ns = 1_000;             # number of gridpoints
+ns = 1_000;             # number of points in the time grid
 
 # We initialize the infinite model and choose the Ipopt solver:
 m = InfiniteModel(opt)
@@ -71,9 +71,10 @@ optimize!(m)
 termination_status(m)
 
 # Extract the results:
-opt_obj = objective_value(m)
-c_opt, B_opt = value(c), value(B)
+c_opt = value(c)
+B_opt = value(B)
 ts = supports(t)
+opt_obj = objective_value(m) # V(B0, 0)
 
 # Plot the results:
 using Plots
@@ -90,8 +91,8 @@ den = (λ1-λ2)r
 Ω1 = (k + (r*B0-k)λ2)/den  
 Ω2 = (k + (r*B0-k)λ1)/den 
 c0 = r*B0 + (r)Ω1 + (r-ρ)Ω2
-BB(t) = (k/r) - Ω1*exp((r)t) + Ω2*exp(-(r-ρ)t)
-cc(t) = k + (c0-k)*exp(-(r-ρ)t)
+BB(t; k=k,r=r,ρ=ρ,Ω1=Ω1,Ω2=Ω2) = (k/r) - Ω1*exp((r)t) + Ω2*exp(-(r-ρ)t)
+cc(t; k=k,r=r,ρ=ρ,c0=c0)       = k + (c0-k)*exp(-(r-ρ)t)
 
 # Compare the solution given by `InfiniteOpt` with the closed form:
 plot(legend=:topright);
