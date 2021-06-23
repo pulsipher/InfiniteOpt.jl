@@ -146,10 +146,10 @@ add_supports(t, extra_ts)
 # i(t, \xi) \leq i_{max}, \ \forall t \in \mathcal{D}_t, \xi \in \mathcal{D}_{\xi}.
 # ```
 ## Define the initial conditions
-@constraint(model, s == s0, DomainRestrictions(t => 0))
-@constraint(model, e == e0, DomainRestrictions(t => 0))
-@constraint(model, i == i0, DomainRestrictions(t => 0))
-@constraint(model, r == r0, DomainRestrictions(t => 0))
+@constraint(model, s(0, ξ) == s0)
+@constraint(model, e(0, ξ) == e0)
+@constraint(model, i(0, ξ) == i0)
+@constraint(model, r(0, ξ) == r0)
 
 ## Define the SEIR equations
 @constraint(model, s_constr, ∂(s, t) == -(1 - u) * β * si)

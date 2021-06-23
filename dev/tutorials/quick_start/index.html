@@ -68,19 +68,19 @@ And data, a 4-element Vector{GeneralVariableRef}:
  y[2](ξ)
  y[3](ξ)
  y[4](ξ)</code></pre><p>Notice that we specifying the initial guess for all of them via <code>start</code>. We also  can symbolically define variable conditions like the lower bound on <code>y</code>.</p><p>That does it for this example, but other problems might also employ the following:</p><ul><li>Finite variables: variables that do not depend on infinite parameters  (defined using <code>@variable</code>)</li><li>Semi-infinite variables: infinite variables where 1 or more parameters are  set a particular point (defined using <code>@variable</code> with the <a href="../../manual/variable/#InfiniteOpt.SemiInfinite"><code>SemiInfinite</code></a>  variable type argument) </li><li>Point variables: infinite variables at a particular point (defined using  <code>@variable</code> with the <a href="../../manual/variable/#InfiniteOpt.Point"><code>Point</code></a> variable type argument).</li></ul><h3 id="Objective-and-Constraints"><a class="docs-heading-anchor" href="#Objective-and-Constraints">Objective &amp; Constraints</a><a id="Objective-and-Constraints-1"></a><a class="docs-heading-anchor-permalink" href="#Objective-and-Constraints" title="Permalink"></a></h3><p>Now that the variables and parameters are ready to go, let&#39;s define our problem.  First, we can define the objective using  <a href="https://jump.dev/JuMP.jl/v0.21.8/reference/objectives/#JuMP.@objective"><code>@objective</code></a>:</p><pre><code class="language-julia-repl">julia&gt; @objective(model, Min, integral(sum(u[i]^2 for i in I), t))
-∫{t ∈ [0, 60]}[u[1](t)² + u[2](t)²]</code></pre><p>Notice that we also employ <a href="../../manual/measure/#InfiniteOpt.MeasureToolbox.integral-Tuple{AbstractJuMPScalar, GeneralVariableRef, Real, Real}"><code>integral</code></a> to define the integral. Note that  objectives must evaluate over all included infinite domains. </p><p>Now let&#39;s define the initial conditions using  <a href="https://jump.dev/JuMP.jl/v0.21.8/reference/constraints/#JuMP.@constraint"><code>@constraint</code></a>  in combination with <a href="../../manual/constraint/#InfiniteOpt.DomainRestrictions"><code>DomainRestrictions</code></a> which will restrict the domain  of the constraints to only be enforced at the initial time:</p><pre><code class="language-julia-repl">julia&gt; @constraint(model, [i in I], x[i] == x0[i], DomainRestrictions(t =&gt; 0))
+∫{t ∈ [0, 60]}[u[1](t)² + u[2](t)²]</code></pre><p>Notice that we also employ <a href="../../manual/measure/#InfiniteOpt.MeasureToolbox.integral-Tuple{AbstractJuMPScalar, GeneralVariableRef, Real, Real}"><code>integral</code></a> to define the integral. Note that  objectives must evaluate over all included infinite domains. </p><p>Now let&#39;s define the initial conditions using  <a href="https://jump.dev/JuMP.jl/v0.21.8/reference/constraints/#JuMP.@constraint"><code>@constraint</code></a>  in combination with <a href="../../guide/variable/#Restricted-Variables">Restricted Variables</a> which will restrict the domain  of the variables to only be enforced at the initial time:</p><pre><code class="language-julia-repl">julia&gt; @constraint(model, [i in I], x[i](0, ξ) == x0[i])
 1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
     Dimension 1, 1:2
 And data, a 2-element Vector{InfOptConstraintRef}:
- x[1](t, ξ) = 0.0, ∀ t = 0, ξ ~ Normal
- x[2](t, ξ) = 0.0, ∀ t = 0, ξ ~ Normal
+ x[1](0, ξ) = 0.0, ∀ ξ ~ Normal
+ x[2](0, ξ) = 0.0, ∀ ξ ~ Normal
 
-julia&gt; @constraint(model, [i in I], v[i] == v0[i], DomainRestrictions(t =&gt; 0))
+julia&gt; @constraint(model, [i in I], v[i](0, ξ) == v0[i])
 1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
     Dimension 1, 1:2
 And data, a 2-element Vector{InfOptConstraintRef}:
- v[1](t, ξ) = 0.0, ∀ t = 0, ξ ~ Normal
- v[2](t, ξ) = 0.0, ∀ t = 0, ξ ~ Normal</code></pre><p>Note it is important that we include appropriate boundary conditions when using  derivatives in our model. For more information please see  <a href="../../guide/derivative/#deriv_docs">Derivative Operators</a>.</p><p>Next, we can add our model constraints that have derivatives using  <a href="https://jump.dev/JuMP.jl/v0.21.8/reference/constraints/#JuMP.@constraint"><code>@constraint</code></a>  and <a href="../../manual/derivative/#InfiniteOpt.deriv"><code>deriv</code></a>:</p><pre><code class="language-julia-repl">julia&gt; @constraint(model, c1[i in I], deriv(x[i], t) == v[i])
+ v[1](0, ξ) = 0.0, ∀ ξ ~ Normal
+ v[2](0, ξ) = 0.0, ∀ ξ ~ Normal</code></pre><p>Note it is important that we include appropriate boundary conditions when using  derivatives in our model. For more information please see  <a href="../../guide/derivative/#deriv_docs">Derivative Operators</a>.</p><p>Next, we can add our model constraints that have derivatives using  <a href="https://jump.dev/JuMP.jl/v0.21.8/reference/constraints/#JuMP.@constraint"><code>@constraint</code></a>  and <a href="../../manual/derivative/#InfiniteOpt.deriv"><code>deriv</code></a>:</p><pre><code class="language-julia-repl">julia&gt; @constraint(model, c1[i in I], deriv(x[i], t) == v[i])
 1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
     Dimension 1, 1:2
 And data, a 2-element Vector{InfOptConstraintRef}:
@@ -92,14 +92,14 @@ julia&gt; @constraint(model, c2[i in I], ξ * deriv(v[i], t) == u[i])
     Dimension 1, 1:2
 And data, a 2-element Vector{InfOptConstraintRef}:
  c2[1] : ξ*∂/∂t[v[1](t, ξ)] - u[1](t) = 0.0, ∀ t ∈ [0, 60], ξ ~ Normal
- c2[2] : ξ*∂/∂t[v[2](t, ξ)] - u[2](t) = 0.0, ∀ t ∈ [0, 60], ξ ~ Normal</code></pre><p>Finally, we can define our last 2 constraints:</p><pre><code class="language-julia-repl">julia&gt; @constraint(model, c3[w in W], y[w] == sum((x[i] - p[i, w])^2 for i in I), DomainRestrictions(t =&gt; tw[w]))
+ c2[2] : ξ*∂/∂t[v[2](t, ξ)] - u[2](t) = 0.0, ∀ t ∈ [0, 60], ξ ~ Normal</code></pre><p>Finally, we can define our last 2 constraints:</p><pre><code class="language-julia-repl">julia&gt; @constraint(model, c3[w in W], y[w] == sum((x[i](tw[w], ξ) - p[i, w])^2 for i in I))
 1-dimensional DenseAxisArray{InfOptConstraintRef,1,...} with index sets:
     Dimension 1, 1:4
 And data, a 4-element Vector{InfOptConstraintRef}:
- c3[1] : -x[1](t, ξ)² - x[2](t, ξ)² + y[1](ξ) + 2 x[1](t, ξ) + 2 x[2](t, ξ) = 2.0, ∀ t = 0, ξ ~ Normal
- c3[2] : -x[1](t, ξ)² - x[2](t, ξ)² + y[2](ξ) + 8 x[1](t, ξ) + 6 x[2](t, ξ) = 25.0, ∀ t = 25, ξ ~ Normal
- c3[3] : -x[1](t, ξ)² - x[2](t, ξ)² + y[3](ξ) + 12 x[1](t, ξ) = 36.0, ∀ t = 50, ξ ~ Normal
- c3[4] : -x[1](t, ξ)² - x[2](t, ξ)² + y[4](ξ) + 2 x[1](t, ξ) + 2 x[2](t, ξ) = 2.0, ∀ t = 60, ξ ~ Normal
+ c3[1] : -x[1](0, ξ)² - x[2](0, ξ)² + y[1](ξ) + 2 x[1](0, ξ) + 2 x[2](0, ξ) = 2.0, ∀ ξ ~ Normal
+ c3[2] : -x[1](25, ξ)² - x[2](25, ξ)² + y[2](ξ) + 8 x[1](25, ξ) + 6 x[2](25, ξ) = 25.0, ∀ ξ ~ Normal
+ c3[3] : -x[1](50, ξ)² - x[2](50, ξ)² + y[3](ξ) + 12 x[1](50, ξ) = 36.0, ∀ ξ ~ Normal
+ c3[4] : -x[1](60, ξ)² - x[2](60, ξ)² + y[4](ξ) + 2 x[1](60, ξ) + 2 x[2](60, ξ) = 2.0, ∀ ξ ~ Normal
 
 julia&gt; @constraint(model, c4, expect(sum(y[w] for w in W), ξ) &lt;= ϵ)
 c4 : 𝔼{ξ}[y[1](ξ) + y[2](ξ) + y[3](ξ) + y[4](ξ)] - ϵ ≤ 0.0</code></pre><p>Notice we are able to invoke an expectation simply by calling <a href="../../manual/measure/#InfiniteOpt.MeasureToolbox.expect"><code>expect</code></a>.</p><p>That&#39;s it, now we have our problem defined in <code>InfiniteOpt</code>!</p><h2 id="Solution-and-Queries"><a class="docs-heading-anchor" href="#Solution-and-Queries">Solution &amp; Queries</a><a id="Solution-and-Queries-1"></a><a class="docs-heading-anchor-permalink" href="#Solution-and-Queries" title="Permalink"></a></h2><h3 id="Optimize"><a class="docs-heading-anchor" href="#Optimize">Optimize</a><a id="Optimize-1"></a><a class="docs-heading-anchor-permalink" href="#Optimize" title="Permalink"></a></h3><p>Now that our model is defined, let&#39;s optimize it via <a href="../../manual/optimize/#JuMP.optimize!-Tuple{InfiniteModel}"><code>optimize!</code></a>:</p><pre><code class="language-julia-repl">julia&gt; optimize!(model)
@@ -138,14 +138,13 @@ model = InfiniteModel(Ipopt.Optimizer)
 @objective(model, Min, integral(sum(u[i]^2 for i in I), t))
 
 # SET THE INITIAL CONDITIONS
-@constraint(model, [i in I], x[i] == x0[i], DomainRestrictions(t =&gt; 0))
-@constraint(model, [i in I](t == 0), v[i] == v0[i], DomainRestrictions(t =&gt; 0))
+@constraint(model, [i in I], x[i](0, ξ) == x0[i])
+@constraint(model, [i in I], v[i](0, ξ) == v0[i])
 
 # SET THE PROBLEM CONSTRAINTS
 @constraint(model, c1[i in I], @deriv(x[i], t) == v[i])
 @constraint(model, c2[i in I], ξ * @deriv(v[i], t) == u[i])
-@constraint(model, c3[w in W], y[w] == sum((x[i] - p[i, w])^2 for i in I), 
-            DomainRestrictions(t =&gt; tw[w]))
+@constraint(model, c3[w in W], y[w] == sum((x[i](tw[w], ξ) - p[i, w])^2 for i in I))
 @constraint(model, c4, expect(sum(y[w] for w in W), ξ) &lt;= ϵ)
 
 # SOLVE THE MODEL
@@ -155,4 +154,4 @@ optimize!(model)
 termination_status(model)
 opt_obj = objective_value(model)
 u_opt = value.(u)
-u_ts = supports.(u)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../install/">« Installation</a><a class="docs-footer-nextpage" href="../../examples/Optimal Control/consumption_savings/">Consumption Savings Problem »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 21 June 2021 17:06">Monday 21 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+u_ts = supports.(u)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../install/">« Installation</a><a class="docs-footer-nextpage" href="../../examples/Optimal Control/consumption_savings/">Consumption Savings Problem »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 23 June 2021 20:02">Wednesday 23 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

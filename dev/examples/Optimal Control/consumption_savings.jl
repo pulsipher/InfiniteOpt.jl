@@ -58,8 +58,8 @@ m = InfiniteModel(opt)
 @objective(m, Max, integral(u(c), t, weight_func = discount))    
 
 # Set the initial/terminal conditions:
-@constraint(m, B == B0, DomainRestrictions(t => 0))                    
-@constraint(m, B == 0, DomainRestrictions(t => T))                     
+@constraint(m, B(0) == B0)                    
+@constraint(m, B(T) == 0)                     
 
 # Set the budget constraint:
 @constraint(m, c1, deriv(B, t) == BC(B, c; r=r))

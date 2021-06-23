@@ -19,8 +19,8 @@ z
 julia&gt; @objective(inf_model, Min, 2z + support_sum(y, t))
 2 z + support_sum{t}[y(t)]
 
-julia&gt; @constraint(inf_model, initial, y == 1, DomainRestrictions(t =&gt; 0))
-initial : y(t) = 1.0, ∀ t = 0
+julia&gt; @constraint(inf_model, initial, y(0) == 1)
+initial : y(0) = 1.0
 
 julia&gt; @constraint(inf_model, constr, y^2 - z &lt;= 42)
 constr : y(t)² - z ≤ 42.0, ∀ t ∈ [0, 10]
@@ -30,7 +30,8 @@ Min 2 z + support_sum{t}[y(t)]
 Subject to
  y(t) ≥ 0.0, ∀ t ∈ [0, 10]
  z binary
- initial : y(t) = 1.0, ∀ t = 0
+ y(0) ≥ 0.0
+ initial : y(0) = 1.0
  constr : y(t)² - z ≤ 42.0, ∀ t ∈ [0, 10]</code></pre><p>Now we can make <code>JuMP</code> model containing the transcribed version of <code>inf_model</code>  via <a href="../../manual/optimize/#InfiniteOpt.build_optimizer_model!"><code>build_optimizer_model!</code></a> and then extract it via  <a href="../../manual/optimize/#InfiniteOpt.optimizer_model"><code>optimizer_model</code></a>:</p><pre><code class="language-julia-repl">julia&gt; build_optimizer_model!(inf_model)
 
 julia&gt; trans_model = optimizer_model(inf_model)
@@ -130,8 +131,8 @@ inf_model = InfiniteModel()
 @objective(inf_model, Min, support_sum(y^2, t))
 
 # Define the constraints
-@constraint(inf_model, y == 1, DomainRestrictions(t =&gt; 0))
-@constraint(inf_model, g == 0, DomainRestrictions(t =&gt; 0))
+@constraint(inf_model, y(0) == 1)
+@constraint(inf_model, g(0, x) == 0)
 @constraint(inf_model, support_sum(deriv(g, t), x) == 42) # support_sum for simplicity
 @constraint(inf_model, 3g + y^2 &lt;= 2)
 
@@ -141,8 +142,8 @@ print(inf_model)
 # output
 Min support_sum{t}[y(t)²]
 Subject to
- y(t) = 1.0, ∀ t = 0
- g(t, x) = 0.0, ∀ t = 0, x[1] ∈ [-1, 1], x[2] ∈ [-1, 1]
+ y(0) = 1.0
+ g(0, [x[1], x[2]]) = 0.0, ∀ x[1] ∈ [-1, 1], x[2] ∈ [-1, 1]
  support_sum{x}[∂/∂t[g(t, x)]] = 42.0, ∀ t ∈ [0, 10]
  y(t)² + 3 g(t, x) ≤ 2.0, ∀ t ∈ [0, 10], x[1] ∈ [-1, 1], x[2] ∈ [-1, 1]</code></pre><p>Thus, we obtain the infinite problem in <code>InfiniteOpt</code>. As previously noted,  transcription would be handled automatically behind the scenes when the model is  optimized. However, we can directly extract the transcribed version by building a  <code>TranscriptionModel</code>:</p><pre><code class="language-julia-repl">julia&gt; build_optimizer_model!(inf_model)
 
@@ -261,4 +262,4 @@ julia&gt; supports(y^2 + z - 42)
  (10.0,)
 
 julia&gt; parameter_refs(y^2 + z - 42)
-(t,)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../constraint/">« Constraints</a><a class="docs-footer-nextpage" href="../optimize/">Optimization »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 21 June 2021 17:06">Monday 21 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+(t,)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../constraint/">« Constraints</a><a class="docs-footer-nextpage" href="../optimize/">Optimization »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 23 June 2021 20:02">Wednesday 23 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
