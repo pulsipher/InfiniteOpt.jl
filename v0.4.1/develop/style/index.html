@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Style Guide · InfiniteOpt.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-178297470-1"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-178297470-1', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/extra_styles.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img class="docs-light-only" src="../../assets/logo.png" alt="InfiniteOpt.jl logo"/><img class="docs-dark-only" src="../../assets/logo-dark.png" alt="InfiniteOpt.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">InfiniteOpt.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../install/">Installation</a></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorials/quick_start/">Quick Start</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox"/><label class="tocitem" for="menuitem-4"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><input class="collapse-toggle" id="menuitem-4-1" type="checkbox"/><label class="tocitem" for="menuitem-4-1"><span class="docs-label">Optimal Control</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/Optimal Control/consumption_savings/">Consumption Savings Problem</a></li><li><a class="tocitem" href="../../examples/Optimal Control/hovercraft/">Hovercraft Path Planning</a></li><li><a class="tocitem" href="../../examples/Optimal Control/pandemic_control/">Pandemic Control</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4-2" type="checkbox"/><label class="tocitem" for="menuitem-4-2"><span class="docs-label">Stochastic Optimization</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/Stochastic Optimization/farmer/">Two-Stage Stochastic Program</a></li><li><a class="tocitem" href="../../examples/Stochastic Optimization/flexible_design/">Power Network Flexibility Design</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox"/><label class="tocitem" for="menuitem-5"><span class="docs-label">User Guide</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../guide/model/">Infinite Models</a></li><li><a class="tocitem" href="../../guide/domains/">Infinite Domains</a></li><li><a class="tocitem" href="../../guide/parameter/">Infinite Parameters</a></li><li><a class="tocitem" href="../../guide/finite_parameter/">Finite Parameters</a></li><li><a class="tocitem" href="../../guide/variable/">Variables</a></li><li><a class="tocitem" href="../../guide/derivative/">Derivatives</a></li><li><a class="tocitem" href="../../guide/expression/">Expressions</a></li><li><a class="tocitem" href="../../guide/measure/">Measures</a></li><li><a class="tocitem" href="../../guide/objective/">Objectives</a></li><li><a class="tocitem" href="../../guide/constraint/">Constraints</a></li><li><a class="tocitem" href="../../guide/transcribe/">Model Transcription</a></li><li><a class="tocitem" href="../../guide/optimize/">Optimization</a></li><li><a class="tocitem" href="../../guide/result/">Results</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-6" type="checkbox"/><label class="tocitem" for="menuitem-6"><span class="docs-label">API Manual</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../manual/model/">Infinite Models</a></li><li><a class="tocitem" href="../../manual/domains/">Infinite Domains</a></li><li><a class="tocitem" href="../../manual/parameter/">Infinite Parameters</a></li><li><a class="tocitem" href="../../manual/finite_parameter/">Finite Parameters</a></li><li><a class="tocitem" href="../../manual/variable/">Variables</a></li><li><a class="tocitem" href="../../manual/derivative/">Derivatives</a></li><li><a class="tocitem" href="../../manual/expression/">Expressions</a></li><li><a class="tocitem" href="../../manual/measure/">Measures</a></li><li><a class="tocitem" href="../../manual/objective/">Objectives</a></li><li><a class="tocitem" href="../../manual/constraint/">Constraints</a></li><li><a class="tocitem" href="../../manual/transcribe/">Model Transcription</a></li><li><a class="tocitem" href="../../manual/optimize/">Optimization</a></li><li><a class="tocitem" href="../../manual/result/">Results</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-7" type="checkbox" checked/><label class="tocitem" for="menuitem-7"><span class="docs-label">Development</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../extensions/">Extensions</a></li><li><a class="tocitem" href="../start_guide/">Getting Started</a></li><li class="is-active"><a class="tocitem" href>Style Guide</a><ul class="internal"><li><a class="tocitem" href="#File-Organization"><span>File Organization</span></a></li><li><a class="tocitem" href="#Julia-Code"><span>Julia Code</span></a></li><li><a class="tocitem" href="#Docstrings-and-Comments"><span>Docstrings and Comments</span></a></li><li><a class="tocitem" href="#Unit-Tests"><span>Unit Tests</span></a></li><li><a class="tocitem" href="#Documentation-Pages"><span>Documentation Pages</span></a></li><li><a class="tocitem" href="#Case-Study-Examples"><span>Case Study Examples</span></a></li></ul></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Development</a></li><li class="is-active"><a href>Style Guide</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Style Guide</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/docs/src/develop/style.md#L" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Style-Guide"><a class="docs-heading-anchor" href="#Style-Guide">Style Guide</a><a id="Style-Guide-1"></a><a class="docs-heading-anchor-permalink" href="#Style-Guide" title="Permalink"></a></h1><p>Below we detail the formatting, naming, and organizational styles used in  <code>InfiniteOpt</code>. We kindly ask developers to adhere to these practices in efforts  to foster consistency.</p><h2 id="File-Organization"><a class="docs-heading-anchor" href="#File-Organization">File Organization</a><a id="File-Organization-1"></a><a class="docs-heading-anchor-permalink" href="#File-Organization" title="Permalink"></a></h2><p>Files for <code>InfiniteOpt</code> are principally stored in 5 locations:</p><ul><li>the base directory <code>./</code>,</li><li>the source file directory <code>./src/</code>,</li><li>the source code testing directory <code>./test/</code>,</li><li>the documentation source file directory <code>./docs/</code>,</li><li>and the example scripts directory <code>./examples/</code>.</li></ul><p>The base directory is for certain critical package files such as the <code>README.md</code> file and the CI (virtual testing service) configuration files. Files should NOT  be added or removed from this directory, but may be modified as needed. </p><p>Naturally, the source directory is where all the source code files are located.  The principal file <code>InfiniteOpt.jl</code> is where the main module is defined, all  source code files are included, and all methods/datatypes/macros are exported. This  file shouldn&#39;t contain any function or datatype definitions directly, but rather  should include source files containing such via <code>include(&quot;file_name.jl&quot;)</code>. Where  possible new datatypes should be defined in <code>datatypes.jl</code> and new methods should  be defined in the appropriate file (e.g., a new parameter method should be  defined in <code>parameters.jl</code>). New files can be added as necessary to help with  organization and to prevent a particular file from becoming too long. Also, note  that any submodule (e.g., <code>TranscriptionOpt</code>) should be defined within its own  sub-directory named after itself.</p><p>The test directory contains all the files in appropriate organization to test  all of the methods, datatypes, and macros defined in the source files. The file  structure here should emulate that of the <code>./src/</code> directory since each file  should by systematically tested as described be below in the Unit Tests section.  Here the principle file is <code>runtests.jl</code> which serves as the backbone for all the  unit testing. Again, no explicit tests should be contain in it, but rather  inclusions of test files via <code>include(&quot;file_name&quot;)</code>.</p><p>The documentation directory follows a particular structure as explained in the  documentation for <code>Documenter.jl</code>. Here the root directory <code>./docs/</code> contains  <code>make.jl</code> which is the script that generates the documentation via <code>Documenter.jl</code>.  The <code>Project.toml</code> includes the packages necessary to do this. The <code>./docs/src/</code>  sub-directory is where source code is stored to build the documentation pages.  When building the documentation locally, a <code>./docs/build</code> directory will also  appear that stores the built HTML files. However, this directory is not tracked  by Git and any changes here will be ignored.</p><p>The example directory contains scripted use examples of <code>InfiniteOpt</code>. Each  example should be stored in single <code>.jl</code> file where possible. However, other more  complex examples that use multiple files should be stored in an appropriately  named folder.</p><p>Please note that all file/folder names should use complete names and avoid  abbreviations where possible unless the abbreviations are unambiguous and common  knowledge. Moreover, names should be lowercase and use underscores between  words: <code>example_file_name.jl</code>.  </p><h2 id="Julia-Code"><a class="docs-heading-anchor" href="#Julia-Code">Julia Code</a><a id="Julia-Code-1"></a><a class="docs-heading-anchor-permalink" href="#Julia-Code" title="Permalink"></a></h2><p>Here we detail the programmatic style used with <code>InfiniteOpt</code>. This is done in an  effort to make this package intuitive for new-comers and to ease development. This  style closely follows that of <code>JuMP.jl</code> with similar deviations from typical Julia  styles. Please refer to the   <a href="https://jump.dev/JuMP.jl/v0.21.8/developers/style/"><code>JuMP</code> style guide</a> as this  is the style used by <code>InfiniteOpt</code>.</p><p>In addition, we adopt the following practices: </p><ul><li>All names should be meaningful and readily identifiable. This is bad:<pre><code class="language-julia">x = y2 - cp</code></pre>This is good:<pre><code class="language-julia">new_pizza_cost = old_pizza_cost - discount</code></pre>This will make lines longer, but much more understandable.</li><li>Avoid the use explicit numeric values (i.e., magic numbers): This is bad:<pre><code class="language-julia">tax = 0.07 * total_price</code></pre>Typically, this will employ the use of constants via <code>const</code> This is good:<pre><code class="language-julia">const TAX_RATE = 0.07
+tax = TAX_RATE * total_price</code></pre>Exceptions to this rule include the use of <code>1</code>, <code>1.0</code>, <code>0</code>, <code>0.0</code>, <code>-1</code>, <code>-1.0</code>, <code>Inf</code>, and <code>-Inf</code>.</li><li>Where possible use <code>eachindex</code> to iterate over an datatype: This is bad:<pre><code class="language-julia">for i in 1:length(A)
+    A[i] = i
+end</code></pre>This is good:<pre><code class="language-julia">for i in eachindex(A)
+    A[i] = i
+end</code></pre></li><li>All function arguments and <code>struct</code> elements should be typed. Also, function outputs should be typed where possible.    This is bad:<pre><code class="language-julia">function my_new_function(arg1, arg2)
+    return arg1 + arg2
+end
+struct MyNewStruct
+    thing1
+    thing2
+end</code></pre>This is good:<pre><code class="language-julia">function my_new_function(arg1::Int, arg2::Int)::Int
+    return arg1 + arg2
+end
+struct MyNewStruct
+    thing1::Int
+    thing2::String
+end</code></pre></li><li>Type dispatch should be used instead of conditional statements based on type: This is bad:<pre><code class="language-julia">function my_new_function(arg::AbstractType)::ReturnType
+  if arg isa Type1
+      temp = arg + 1
+  elseif arg isa Type2
+      temp = 0
+  end
+  # do more stuff with temp
+  return temp
+end</code></pre>This is good:<pre><code class="language-julia">## Internal dispatch for my_new_function
+# Type1
+function _my_internal_function(arg::Type1)::Int
+    return arg + 1
+end
+# Type2
+function _my_internal_function(arg::Type1)::Int
+    return 0
+end
+# Fallback
+function _my_internal_function(arg::AbstractType)
+    error(&quot;Unrecognized type...&quot;)
+end
+# Main method
+function my_new_function(arg::AbstractType)::ReturnType
+  temp = _my_internal_function(arg)
+  # do more stuff with temp
+  return temp
+end</code></pre></li><li>Functions should be built in a modular manner to avoid code repetition and  excessively long function definitions.</li></ul><p>In addition to the above guidelines, contributions should be structured such that  extensions are readily possible without having to rewrite all of the associated  functions. The ability to easily facilitate extensions is a core goal of  <code>InfiniteOpt</code> and this should be kept in mind when developing contributions. </p><p>TODO add example.</p><h2 id="Docstrings-and-Comments"><a class="docs-heading-anchor" href="#Docstrings-and-Comments">Docstrings and Comments</a><a id="Docstrings-and-Comments-1"></a><a class="docs-heading-anchor-permalink" href="#Docstrings-and-Comments" title="Permalink"></a></h2><p>Here we discuss the use of Docstrings and comments in <code>InfiniteOpt</code>. All public  functions, macros, and datatypes should have a Docstring. This is enables the  help query tool in Julia and is needed for inclusion in the documentation pages.  For functions and macros the format should follow the form:</p><pre><code class="language-julia">&quot;&quot;&quot;
+    my_new_function(arg1::Type, [arg2::Type = 0; karg1::Type = 42])::Type
+
+Precise and concise description of what `my_new_function` does and what it
+returns (also what will cause it will trigger errors). This is in markdown
+format.
+
+**Example**
+```julia-repl
+julia&gt; my_new_function(input...)
+expected_output
+```
+&quot;&quot;&quot;
+function my_new_function(arg1::Type, arg2::Type = 0; karg1::Type = 42)::Type
+    return arg1 + arg2 + karg1
+end</code></pre><p>Notice that the function is declared at the top with an ident and the optional  arguments are enclosed within square brackets. This can be spaced over several  lines if there are too many arguments to fit on one line. </p><p>For datatypes Docstrings should follow the form:</p><pre><code class="language-julia">&quot;&quot;&quot;
+    MyNewStruct
+
+Precise and concise description of what this is.
+
+**Fields**
+- `element1::Type` Description of what this is.
+- `element2::Type` Description of what this is.
+&quot;&quot;&quot;
+struct MyNewStruct
+    element1::Type
+    element2::Type
+end</code></pre><p>Note that if the struct is parametric and/or has inheritance, this information  should also be shown in the header. For example, we have that  <code>InfOptParameter{T &lt;: AbstractInfiniteSet} &lt;: JuMP.AbstractVariable</code>.</p><p>For more docstring information please visit the Julia documentation  <a href="https://docs.julialang.org/en/v1/manual/documentation/index.html">here</a>.</p><p>Furthermore, all internal functions and datatypes should have an appropriate  commented description of what they do above them. This should follow the  form:</p><pre><code class="language-julia"># Description of what _my_internal_function does. Bla Bla Bla Bla Bla Bla Bla
+# Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla.
+function _my_internal_function(arg1::Type, arg2::Type)::Type
+    return arg1 + arg2
+end</code></pre><p>Finally, we encourage a healthy usage of comments throughout source code to  enhance its readability. A simple comment before a complex block of code can make  all the difference.</p><h2 id="Unit-Tests"><a class="docs-heading-anchor" href="#Unit-Tests">Unit Tests</a><a id="Unit-Tests-1"></a><a class="docs-heading-anchor-permalink" href="#Unit-Tests" title="Permalink"></a></h2><p>A nice attribute of <code>InfiniteOpt</code> is that it is near perfect code testing  coverage. This success is due to strictly testing every method and macro rigorously  such that every line is called. This has been very advantageous in detecting  many bugs which can be difficult to anticipate given the quantity of source code.  Thus, tests must be created/updated to cover any new additions/changes in the  <code>./src/</code> directory.</p><p>The <code>runtests.jl</code> file serves as the principal backbone for doing this. We use  a nested <code>@testset</code> structure using <code>Test.jl</code>. Please refer to the documentation  <a href="https://docs.julialang.org/en/v1/stdlib/Test/">here</a> to learn about the relevant  testing macros. The structure typically groups related functions together where  each function/macro/datatype is tested via a <code>@testset</code> that employs a number of  tests via <code>@test</code> that thoroughly test it. This is typically of the form:</p><pre><code class="language-julia">@testset &quot;my_new_function&quot; begin
+    @test my_new_function(input1) == expected_output1
+    @test my_new_function(input2) == expected_output2
+    @test my_new_function(input3) == expected_output3
+    .
+    .
+    .
+end</code></pre><p>Thus, a function&#39;s <code>@testset</code> should be updated when the respective function has  been modified. Moreover, a new <code>@testset</code> should be added for each new  function/macro. New function tests should be implemented in an order such that  any other functions/macros they depend on are tested first.</p><p>Also, where possible please include comments to explain what is going on.</p><p>Please refer to <code>InfiniteOpt/test/</code> for examples.</p><h2 id="Documentation-Pages"><a class="docs-heading-anchor" href="#Documentation-Pages">Documentation Pages</a><a id="Documentation-Pages-1"></a><a class="docs-heading-anchor-permalink" href="#Documentation-Pages" title="Permalink"></a></h2><p>Documentation in <code>InfiniteOpt</code> is generated via  <a href="https://github.com/JuliaDocs/Documenter.jl"><code>Documenter.jl</code></a>. Please refer to  its documentation to learn about how to use it.</p><p>The source markdown files stored in <code>./docs/src/</code> are what comprise the source  code for the documentation pages and are principally what should be updated. A  guide for markdown syntax is provided <a href="https://www.markdownguide.org/">here</a>.  Also, note that <code>Documenter</code> enables unique functionality in addition to this  general guide.</p><p>When a new Docstring is created as described above, it should be included in the  appropriate <code>@docs</code> block on its corresponding manual page. Moreover, content  should be added in an appropriate section (or perhaps in a new section) in the  guide that overviews how to implement the new capabilities in an example driven  fashion. These examples should use <code>jldoctest</code>s where possible as well to assess  whether the example code is functional.</p><p>Documentation content should be concise and use examples and lists where possible  to provide a more visual guide. Also, we ask that passive voice be avoided.</p><p>Be sure to test the documentation first locally by running <code>make.jl</code> to check  for problems which may include:</p><ul><li>unrecognized docstrings</li><li>failed doctests</li><li>faulty links</li><li>unrecognized formats</li><li>missing package dependencies</li><li>etc.</li></ul><h2 id="Case-Study-Examples"><a class="docs-heading-anchor" href="#Case-Study-Examples">Case Study Examples</a><a id="Case-Study-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Case-Study-Examples" title="Permalink"></a></h2><p>We use <a href="https://fredrikekre.github.io/Literate.jl/v2.8/"><code>Literate.jl</code></a> to run  the case studies in <code>./docs/src/examples/</code> and generate markdown files that are  incorporated into the documentation for the <code>Examples</code> sections. </p><p>A new case study example can be added to an appropriate sub-folder of  <code>./docs/src/examples/</code> (a new sub-folder can be made if needed). The example file  should be <code>.jl</code> file that uses comments in accordance with <code>Literate.jl</code>&#39;s format.  This is exemplified below:</p><pre><code class="language-julia"># # My Example Name
+# Text to introduce my example...
+
+# ## Background 
+# Text that describes the problem we are trying to solve. We can also include 
+# latex math like ``x^2`` and math blocks such as:
+# ```math 
+# x^2 + y = 1
+# ```
+
+# ## Formulation
+# Text to introduce as needed...
+using InfiniteOpt, Clp # import the needed packages
+
+## This comment type will be part of the code block
+model = InfiniteModel(Clp.Optimizer) # add side comments to code
+
+# This comment type will be Markdown again, thus breaking up the code block
+@infinite_parameter(model, t in [0, 1], num_supports = 42)
+@variable(model, y &gt;= 0, Infinite(t))
+
+optimize!(model)
+
+## TODO add more code
+
+# ### Maintenance Tests
+# These are here to ensure this example stays up to date. 
+using Test
+@test termination_status(model) == MOI.OPTIMAL
+@test has_values(model)
+## Add more tests as appropriate</code></pre><p>The above file will then be tested and incorporated into the documentation when  <code>./docs/make.jl</code> is called. Notice that we also have the &quot;Maintenance Test&quot;  section at the end that will be used to run checks to ensure the example script  is working as expected (this helps ensure the documentation is up to date).</p><p>The above example would produce the following markdown file via <code>Literate.jl</code>:</p><pre><code class="language-markdown"># My Example Name
+Text to introduce my example...
+
+## Background
+Text that describes the problem we are trying to solve. We can also include
+latex math like ``x^2`` and math blocks such as:
+```math
+x^2 + y = 1
+```
+
+## Formulation
+Text to introduce as needed...
+
+```julia
+using InfiniteOpt, Clp # import the needed packages
+
+# This comment type will be part of the code block
+model = InfiniteModel(Clp.Optimizer) # add side comments to code
+
+```
+
+```julia
+An InfiniteOpt Model
+Feasibility problem with:
+Finite Parameters: 0
+Infinite Parameters: 0
+Variables: 0
+Derivatives: 0
+Measures: 0
+Optimizer model backend information:
+Model mode: AUTOMATIC
+CachingOptimizer state: EMPTY_OPTIMIZER
+Solver name: Clp
+```
+
+This comment type will be Markdown again, thus breaking up the code block
+
+```julia
+@infinite_parameter(model, t in [0, 1], num_supports = 42)
+@variable(model, y &gt;= 0, Infinite(t))
+
+optimize!(model)
+
+# TODO add more code
+```
+
+### Maintenance Tests
+These are here to ensure this example stays up to date.
+
+```julia
+using Test
+@test termination_status(model) == MOI.OPTIMAL
+@test has_values(model)
+# Add more tests as appropriate
+```
+
+```
+Test Passed
+```
+
+---
+
+*This page was generated using [Literate.jl](https://github.com/fredrikekre/Literate.jl).*
+
+</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../start_guide/">« Getting Started</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 23 June 2021 21:04">Wednesday 23 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

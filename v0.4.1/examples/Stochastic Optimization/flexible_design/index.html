@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Power Network Flexibility Design · InfiniteOpt.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-178297470-1"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-178297470-1', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/extra_styles.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img class="docs-light-only" src="../../../assets/logo.png" alt="InfiniteOpt.jl logo"/><img class="docs-dark-only" src="../../../assets/logo-dark.png" alt="InfiniteOpt.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">InfiniteOpt.jl</a></span></div><form class="docs-search" action="../../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><a class="tocitem" href="../../../install/">Installation</a></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../tutorials/quick_start/">Quick Start</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox" checked/><label class="tocitem" for="menuitem-4"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><input class="collapse-toggle" id="menuitem-4-1" type="checkbox"/><label class="tocitem" for="menuitem-4-1"><span class="docs-label">Optimal Control</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../Optimal Control/consumption_savings/">Consumption Savings Problem</a></li><li><a class="tocitem" href="../../Optimal Control/hovercraft/">Hovercraft Path Planning</a></li><li><a class="tocitem" href="../../Optimal Control/pandemic_control/">Pandemic Control</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4-2" type="checkbox" checked/><label class="tocitem" for="menuitem-4-2"><span class="docs-label">Stochastic Optimization</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../farmer/">Two-Stage Stochastic Program</a></li><li class="is-active"><a class="tocitem" href>Power Network Flexibility Design</a><ul class="internal"><li><a class="tocitem" href="#Modeling-and-Solution"><span>Modeling and Solution</span></a></li></ul></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox"/><label class="tocitem" for="menuitem-5"><span class="docs-label">User Guide</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../guide/model/">Infinite Models</a></li><li><a class="tocitem" href="../../../guide/domains/">Infinite Domains</a></li><li><a class="tocitem" href="../../../guide/parameter/">Infinite Parameters</a></li><li><a class="tocitem" href="../../../guide/finite_parameter/">Finite Parameters</a></li><li><a class="tocitem" href="../../../guide/variable/">Variables</a></li><li><a class="tocitem" href="../../../guide/derivative/">Derivatives</a></li><li><a class="tocitem" href="../../../guide/expression/">Expressions</a></li><li><a class="tocitem" href="../../../guide/measure/">Measures</a></li><li><a class="tocitem" href="../../../guide/objective/">Objectives</a></li><li><a class="tocitem" href="../../../guide/constraint/">Constraints</a></li><li><a class="tocitem" href="../../../guide/transcribe/">Model Transcription</a></li><li><a class="tocitem" href="../../../guide/optimize/">Optimization</a></li><li><a class="tocitem" href="../../../guide/result/">Results</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-6" type="checkbox"/><label class="tocitem" for="menuitem-6"><span class="docs-label">API Manual</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../manual/model/">Infinite Models</a></li><li><a class="tocitem" href="../../../manual/domains/">Infinite Domains</a></li><li><a class="tocitem" href="../../../manual/parameter/">Infinite Parameters</a></li><li><a class="tocitem" href="../../../manual/finite_parameter/">Finite Parameters</a></li><li><a class="tocitem" href="../../../manual/variable/">Variables</a></li><li><a class="tocitem" href="../../../manual/derivative/">Derivatives</a></li><li><a class="tocitem" href="../../../manual/expression/">Expressions</a></li><li><a class="tocitem" href="../../../manual/measure/">Measures</a></li><li><a class="tocitem" href="../../../manual/objective/">Objectives</a></li><li><a class="tocitem" href="../../../manual/constraint/">Constraints</a></li><li><a class="tocitem" href="../../../manual/transcribe/">Model Transcription</a></li><li><a class="tocitem" href="../../../manual/optimize/">Optimization</a></li><li><a class="tocitem" href="../../../manual/result/">Results</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-7" type="checkbox"/><label class="tocitem" for="menuitem-7"><span class="docs-label">Development</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../develop/extensions/">Extensions</a></li><li><a class="tocitem" href="../../../develop/start_guide/">Getting Started</a></li><li><a class="tocitem" href="../../../develop/style/">Style Guide</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li><a class="is-disabled">Stochastic Optimization</a></li><li class="is-active"><a href>Power Network Flexibility Design</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Power Network Flexibility Design</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/pulsipher/InfiniteOpt.jl/blob/master/docs/src/examples/Stochastic Optimization/flexible_design.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Power-Network-Flexibility-Design"><a class="docs-heading-anchor" href="#Power-Network-Flexibility-Design">Power Network Flexibility Design</a><a id="Power-Network-Flexibility-Design-1"></a><a class="docs-heading-anchor-permalink" href="#Power-Network-Flexibility-Design" title="Permalink"></a></h1><p>Here we consider a stochastic flexibility design problem that is inspired from an example problem in Pulsipher JL, Zavala VM. <em>A scalable stochastic programming approach for the design of flexible systems</em>. Computers &amp; Chemical Engineering. 2019 Sep 2;128:69-76. See the paper <a href="https://doi.org/10.1016/j.compchemeng.2019.05.033">here</a>.</p><h2 id="Modeling-and-Solution"><a class="docs-heading-anchor" href="#Modeling-and-Solution">Modeling and Solution</a><a id="Modeling-and-Solution-1"></a><a class="docs-heading-anchor-permalink" href="#Modeling-and-Solution" title="Permalink"></a></h2><pre><code class="language-julia">using InfiniteOpt, Clp, Distributions
+
+# Set the covariance matrix for the uncertain parameters
+θ_nom = [0.; 60.; 10.]
+covar = [80. 0 0; 0 80. 0; 0 0 120.]
+
+# Set the dimensions
+n_z = 3; n_θ = 3; n_d = 3
+
+# Set the problem parameters
+c = ones(n_d) / sqrt(n_d)
+c_max = 5
+U = 10000
+num_samples = 100 # more should be used (kept small for doc generation)
+
+# Initialize the model
+m = InfiniteModel(Clp.Optimizer)
+set_silent(m)
+
+# Set the uncertainty parameters
+@infinite_parameter(m, θ[i = 1:n_θ] ~ MvNormal(θ_nom, covar),
+                    num_supports = num_samples)
+
+# Initialize the variables
+@variable(m, 0 &lt;= y &lt;= 1, Infinite(θ))
+@variable(m, z[1:n_z], Infinite(θ))
+@variable(m, d[1:n_d] &gt;= 0)
+
+# Set objective function
+@objective(m, Max, expect(1 - y, θ))
+
+# Set the line capacity constraints
+@constraint(m, f1, -z[1] - 35 - d[1] &lt;= y * U)
+@constraint(m, f2, z[1] - 35 - d[1] &lt;= y * U)
+@constraint(m, f3, -z[2] - 50 - d[2] &lt;= y * U)
+@constraint(m, f4, z[1] - 50 - d[2] &lt;= y * U)
+
+# Set the generator capacity constraints
+@constraint(m, f5, -z[3] &lt;= y * U)
+@constraint(m, f6, z[3] - 100 - d[3] &lt;= y * U)
+
+# Set the node balance constraints
+@constraint(m, h1, z[1] - θ[1] == 0)
+@constraint(m, h2, -z[1] -z[2] + z[3] - θ[2] == 0)
+@constraint(m, h3, z[2] - θ[3] == 0)
+
+# Enforce the minimum SF
+@constraint(m, max_cost, sum(c[i] * d[i] for i = 1:n_d) &lt;= c_max)
+
+# Solve and and obtain results
+optimize!(m)
+if has_values(m)
+    opt_y = value(y)
+    opt_d = value.(d)
+    opt_obj = objective_value(m)
+end
+
+# Estimate the value of SF
+SF = 1 - sum(opt_y .&gt;= 1e-8) / num_samples
+
+# Print the results
+print(&quot;------------------RESULTS------------------\n&quot;)
+print(&quot;Optimal Objective:     &quot;, opt_obj, &quot;\n&quot;)
+print(&quot;Optimal Cost:          &quot;, sum(c[i] * opt_d[i] for i = 1:n_d), &quot;\n&quot;)
+print(&quot;Maximum Cost:          &quot;, c_max, &quot;\n&quot;)
+print(&quot;Predicted SF:          &quot;, 100 * SF, &quot;%\n&quot;)
+print(&quot;Optimal Design Values: &quot;, opt_d, &quot;\n\n&quot;)</code></pre><pre><code class="nohighlight">------------------RESULTS------------------
+Optimal Objective:     0.9999865533882265
+Optimal Cost:          5.0
+Maximum Cost:          5
+Predicted SF:          98.0%
+Optimal Design Values: [0.0, 0.0, 8.660254037844386]
+
+</code></pre><h3 id="Maintenance-Tests"><a class="docs-heading-anchor" href="#Maintenance-Tests">Maintenance Tests</a><a id="Maintenance-Tests-1"></a><a class="docs-heading-anchor-permalink" href="#Maintenance-Tests" title="Permalink"></a></h3><p>These are here to ensure this example stays up to date.</p><pre><code class="language-julia">using Test
+@test termination_status(m) == MOI.OPTIMAL
+@test opt_y isa Vector{&lt;:Real}</code></pre><pre><code class="nohighlight">Test Passed</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../farmer/">« Two-Stage Stochastic Program</a><a class="docs-footer-nextpage" href="../../../guide/model/">Infinite Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 23 June 2021 21:04">Wednesday 23 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
