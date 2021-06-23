@@ -19,15 +19,16 @@ julia&gt; @objective(model, Min, 2z);
 
 julia&gt; @constraint(model, c1, z &gt;= y);
 
-julia&gt; @constraint(model, c2, y == 42, DomainRestrictions(t =&gt; 0));
+julia&gt; @constraint(model, c2, y(0) == 42);
 
 julia&gt; print(model)
 Min 2 z
 Subject to
  y(t) ≥ 0.0, ∀ t ∈ [0, 10]
- z ≥ 0
+ z ≥ 0.0
  c1 : z - y(t) ≥ 0.0, ∀ t ∈ [0, 10]
- c2 : y(t) = 42.0, ∀ t = 0
+ y(0) ≥ 0.0
+ c2 : y(0) = 42.0
 
 julia&gt; optimize!(model)
 </code></pre><p>Now that the model has been optimized, let&#39;s find out what happened. To determine  why the optimizer stopped, we can use  <a href="../../manual/result/#JuMP.termination_status-Tuple{InfiniteModel}"><code>termination_status</code></a> to report the corresponding <code>MathOptInterface</code>  termination code (possible codes are explained  <a href="https://jump.dev/JuMP.jl/v0.21.8/reference/solutions/#MathOptInterface.TerminationStatusCode">here</a>.</p><pre><code class="language-julia-repl">julia&gt; termination_status(model)
@@ -195,4 +196,4 @@ julia&gt; report[z]
   Objective value      : 83.99999998250514
 
 * Work counters
-  Solve time (sec)   : 0.01000</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../optimize/">« Optimization</a><a class="docs-footer-nextpage" href="../../manual/model/">Infinite Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 23 June 2021 01:41">Wednesday 23 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  Solve time (sec)   : 0.01000</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../optimize/">« Optimization</a><a class="docs-footer-nextpage" href="../../manual/model/">Infinite Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 23 June 2021 17:17">Wednesday 23 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

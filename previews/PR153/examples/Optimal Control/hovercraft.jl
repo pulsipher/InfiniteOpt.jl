@@ -47,14 +47,14 @@ end)
 @objective(m, Min, ∫(u[1]^2 + u[2]^2, t))
 
 # Set the initial conditions with respect to the velocity:
-@constraint(m, [i = 1:2], v[i] == 0, DomainRestrictions(t => 0))
+@constraint(m, [i = 1:2], v[i](0) == 0)
 
 # Define the point physics ODEs which serve as our system model:
 @constraint(m, [i = 1:2], ∂(x[i], t) == v[i])
 @constraint(m, [i = 1:2], ∂(v[i], t) == u[i])
 
 # Ensure we hit all the waypoints:
-@constraint(m, [i = 1:2, j = eachindex(tw)], x[i] == xw[i, j], DomainRestrictions(t => tw[j]))
+@constraint(m, [i = 1:2, j = eachindex(tw)], x[i](tw[j]) == xw[i, j])
 
 # ## Problem Solution
 
